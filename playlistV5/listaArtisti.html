@@ -1,0 +1,363 @@
+<!-- pagina con la lista di tutti gli artisti preferiti dell utente, prenderò l id dell
+utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per popolare la pagina -->
+
+
+<!DOCTYPE html>
+
+<!-- il front end parla direttamente con le api di sopstify,e non solo con il mio backend -->
+<html>
+
+
+<!-- PRIMA DI REGISTRARMI DOVRO' CONTROLLARE CHE L EMAIL (O IL NOME) NON SIA PRESENTE NEL DATABASE -->
+
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Spotifai</title>
+
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="gaxlaxy" />
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome/css/all.css">
+
+    <!-- Main Stylesheet -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- da local host questi due non li carica     perchè ? -->
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <link href="http://localhost:3000/css/style.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/cssMio.css" rel="stylesheet">
+    <!-- <link href="css/cssMio.css" rel="stylesheet"> -->
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+
+</head>
+
+
+
+
+
+
+
+
+<!-- <body> -->
+
+<body onload="start();">
+
+
+    <!-- invece di bg dark, potrei provare a mettere la navbar nero scuro ( e anche il form della ricerca) -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top ">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <!-- <ul class="navbar-nav"> -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Spotifai Home</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+
+                    <li class="nav-item">
+                        <form class="d-flex" role="search" action="risultati" method="GET">
+                            <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
+                                placeholder="Search" aria-label="Search" />
+                        </form>
+                    </li>
+
+
+                    <!-- anche se in teoria se sono in questa pagina dovrei essere loggato per forza -->
+                    <!-- DOVRO' SOSTITUIRE IL DIV SOPRA CON QUELLO SOTTO E VICERVERSA IN BASE AL VALORE DI LOGIN -->
+                    <li class="nav-item" id="in">
+                        <a id="tastoLogin" class="nav-link btn right-buffer left-buffer-s" href="./login">Login</a>
+                    </li>
+
+                    <li class="nav-item dropdown " id="out">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" id="bottoneLogout">
+                            Nome Utente
+                        </a>
+                        <ul class="dropdown-menu  ">
+                            <li><a class="dropdown-item " onclick="logout()" href="/">Logout</a></li>
+                        </ul>
+                    </li>
+
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- START preloader-wrapper -->
+    <div class="preloader-wrapper">
+        <div class="preloader-inner">
+            <div class="spinner-border text-red"></div>
+        </div>
+    </div>
+    <!-- END preloader-wrapper -->
+
+
+
+
+
+    <!-- START main-wrapper -->
+    <section class="d-flex">
+
+        <!-- start of sidenav -->
+        <aside>
+            <div class="sidenav position-sticky d-flex flex-column justify-content-between">
+                <div class="navbar navbar-dark my-4 p-0 font-primary">
+                    <ul class="navbar-nav w-100 ">
+                        <!-- <li class="nav-item "> -->
+                        <li class="nav-item top-buffer-xl">
+                            <a class="nav-link text-white px-0 pt-0" href="./listaArtistiPreferiti">Artisti</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white px-0" href="./listaPlaylist">Playlist</a>
+                        </li>
+                        <br>
+                    </ul>
+                </div>
+                <!-- end of navbar -->
+
+                <ul class="list-inline nml-2">
+                    <li class="list-inline-item">
+                        <a href="#!" class="text-white text-red-onHover pr-2">
+                            <span class="fab fa-twitter"></span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!" class="text-white text-red-onHover p-2">
+                            <span class="fab fa-facebook-f"></span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!" class="text-white text-red-onHover p-2">
+                            <span class="fab fa-instagram"></span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- end of social-links -->
+            </div>
+        </aside>
+        <!-- end of sidenav -->
+
+
+
+
+
+
+
+        <div class="main-content">
+            <!-- start of mobile-nav -->
+            <header class="mobile-nav pt-4">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-6 text-right">
+                            <button class="nav-toggle bg-transparent border text-white">
+                                <span class="fas fa-bars"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="nav-toggle-overlay"></div>
+            <!-- end of mobile-nav -->
+
+
+
+            <div class="container pt-4 mt-5">
+                <div class="row justify-content-between">
+                    <!-- <div class="col-lg-7"> --> <!--alcune cose non saranno a tutto schermo orizzontalmente-->
+                    <div class="col-lg-12">
+
+                        <h2>Artisti preferiti </h2>
+                        <ul class="post-meta mt-3">
+                            <li class="d-inline-block mr-3">
+                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
+                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
+                                <a class="ml-1" href="#">I tuoi artisti preferiti</a>
+                            </li>
+                        </ul>
+                        <!-- qua abbiamo le card dedgli artisti preferiti -->
+                        <div class="row top-buffer-s right-buffer">
+                            <div class="row top-buffer-s right-buffer" id="preferitiContainer">
+                                <div class="col-xl-2 col-md-4 d-none top-buffer-s" id="card-preferiti">
+                                    <div class="card  cardSelezionabile bg-dark p-3 h-100">
+                                        <img class="card-img    bg-dark" src="images/faces.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">artista</h5>
+                                            <!-- <p class="card-text  text-truncate">Artista</p> -->
+                                            <a id="albumLink" class="stretched-link" title="Click to do something"
+                                                href="">
+                                            </a>
+                                        </div>
+                                        <!-- <div class="card-footer">
+                                            <small class="text-muted">Album</small>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- end of post-item -->
+                    </div>
+
+                    <!-- <div class="col-lg-4 col-md-5"> se volessi mettere una colonna a destra nella pagina</div> -->
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+            <!-- start of footer -->
+            <footer class="bg-dark top-buffer">
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-lg-3 col-sm-6 mb-5">
+                            <h5 class="font-primary text-white mb-4">Inspirations</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#!">Privacy State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 mb-5">
+                            <h5 class="font-primary text-white mb-4">Templates</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#!">Privacy State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 mb-5">
+                            <h5 class="font-primary text-white mb-4">Resource</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#!">Privacy State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 mb-5">
+                            <h5 class="font-primary text-white mb-4">Company</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#!">Privacy State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">State</a></li>
+                                <li><a href="#!">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- end of footer -->
+        </div>
+
+    </section>
+    <!-- END main-wrapper -->
+
+    <!-- All JS Files -->
+    <script src="plugins/jQuery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/bootstrap.min.js"></script>
+
+    <!-- dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"></script>
+
+
+    <!-- Main Script -->
+    <script src="js/script.js"></script>
+    <script>
+
+        function start() {
+            loginSiNo();
+            caricaArtistiPreferiti();
+        }
+
+
+        // questa funzione serve solo per prendere dal backend la lista di artisti preferiti dell utente
+        function caricaArtistiPreferiti() {
+            fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + localStorage.getItem("loginEmail"), {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    if (searchResults.length > 0)
+                        popolaArtistiPreferiti(searchResults)
+                    // se non ho risultati devo modificare un qualche div per scrivere all interno della pagina di aggiungere gli artisti
+                })
+        }
+
+
+
+        // questa volta non mi basterà avere 6 card, potrei avere molti più artisti preferiti
+        // ricevo un array di id con gli artisti preferiti e popolo la pagina
+        function popolaArtistiPreferiti(artisti) {
+            console.log("Sono in popolaArtisti")
+            // controllare il token prima di fare la fetch all api di spotify
+
+            for (var i = 0; i < artisti.length; i++) {
+                var card = document.getElementById("card-preferiti");
+                var cont = document.getElementById("preferitiContainer");
+                cont.innerHTML = "";
+                cont.append(card)
+                fetch('https://api.spotify.com/v1/artists/' + artisti[i].idArtista, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((searchResults) => {
+                        var clone = card.cloneNode(true)
+                        clone.id = "idArtista" + searchResults.id;
+                        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
+                        clone.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
+                        clone.getElementsByClassName('stretched-link')[0].href = "/artista?artista=" + searchResults.id;
+                        clone.classList.remove('d-none');
+                        card.after(clone);
+                    })
+            }
+        }
+
+
+
+    </script>
+
+
+</body>
+
+</html>

@@ -113,10 +113,10 @@
                 <div class="navbar navbar-dark my-4 p-0 font-primary">
                     <ul class="navbar-nav w-100">
                         <li class="nav-item top-buffer-xl">
-                            <a class="nav-link text-white px-0 pt-0" href="listaArtistiPreferiti">Artisti</a>
+                            <a class="nav-link text-white px-0 pt-0"  id="linkArtisti" href="listaArtistiPreferiti">Artisti</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link text-white px-0" href="listaPlaylist">Playlist</a>
+                            <a class="nav-link text-white px-0"  id="linkPlaylist" href="listaPlaylist">Playlist</a>
                         </li>
                     </ul>
                 </div>
@@ -365,8 +365,10 @@
 
 
         async function start() {
-            loginSiNo();
-            await elencoPlaylistDropdown();
+            loggato = await loginSiNo();
+            if (loggato == true){
+                await elencoPlaylistDropdown();  
+            }
             artista();  // carico la card dell artista e la lista delle canzoni
             albumArtista("album");  // carico l elenco di album dell artista
             albumArtista("single");  // carico l elenco di album dell artista
@@ -379,6 +381,7 @@
 
         // controlla se l artista è uno dei preferiti, se si modifica il bottone da "aggiungi a preferiti" a "rimuovi da preferiti"
         async function controllaPreferiti() {
+            if (loggato != true) return; //se non sono loggato non controllo
             let tmp = new URLSearchParams(location.search);
             let artistaID = tmp.get("artista")
 
@@ -482,6 +485,13 @@
                     document.getElementsByClassName("card-text")[0].innerHTML = searchResults.genres[0];
                     document.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
                     document.getElementById("bottonePreferiti").setAttribute("name", artistaID); //metto l id nel bottone  
+                    
+                    // se non sono loggato non mi serve il bottone dei preferiti
+                    // console.log(loggato)
+                    if (loggato == false)
+                        document.getElementById("bottonePreferiti").remove(); 
+                        // document.getElementById("bottonePreferiti").classList.add("d-none"); 
+                    
                     listaCanzoniArtista(artistaID)  //devo passare l id dell album per avere la lista delle canzoni
                 })
         }

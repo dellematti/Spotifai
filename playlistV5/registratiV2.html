@@ -126,9 +126,8 @@
                         <!-- <div class="widget bg-dark p-4 text-center top-buffer" id ="registrazione"> -->
                         <div class="widget  p-4 text-center top-buffer" id ="registrazione">
                             <h2 class="widget-title text-white d-inline-block mt-4">Registrati</h2>
-                            <p class="mt-4">Qua scrivere qualcosa sulla registrazione, e poi capire se 
-                                mettere o no il footer sotto.</p>
-                            <form action="#">
+                            <p class="mt-4">Qua scrivere qualcosa sulla registrazione.</p>
+                            <!-- <form action="#">
                                 <div class="form-group">
                                     <input id="email" type="email" class="form-control bg-transparent rounded-0 my-4" placeholder="Email" aria-label="Email"
                                     value="ciao@email.com" aria-describedby="basic-addon1">
@@ -137,15 +136,27 @@
                                     <input id="password2" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
                                     aria-describedby="basic-addon1" value="1234567">
                                     <input id="username" type="text" class="form-control bg-transparent rounded-0 my-4" placeholder="Username" aria-label="Username"
-                                    value="mattia" aria-describedby="basic-addon1">
-                                    
+                                    value="mattia" aria-describedby="basic-addon1">                                    
                                     <button onclick="registrati()" class="btn btn-primary">Registrati</button>
-
-                                    
                                 </div>
-                                <!-- qua devo aggiungere una ref alla pagina di registrazione -->
+                                <a href="./login" id = "linkRegistrati">Oppure fai il login cliccando qui</a>
+                            </form> -->
+                            <form onsubmit="event.preventDefault(); registrati()">  <!-- cosi funziona ok-->
+                                <div class="form-group">
+                                    <input id="email" type="email" class="form-control bg-transparent rounded-0 my-4" placeholder="Email" aria-label="Email"
+                                    value="ciao@email.com" aria-describedby="basic-addon1">
+                                    <input id="password1" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="password2" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="username" type="text" class="form-control bg-transparent rounded-0 my-4" placeholder="Username" aria-label="Username"
+                                    value="mattia" aria-describedby="basic-addon1">  
+                                    <button type="submit" class="btn btn-primary">registrati</button>
+                                </div>
                                 <a href="./login" id = "linkRegistrati">Oppure fai il login cliccando qui</a>
                             </form>
+
+
                         </div>
                         <!-- end of subscription-widget -->
 

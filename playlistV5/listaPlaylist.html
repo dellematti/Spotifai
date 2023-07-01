@@ -236,12 +236,48 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row justify-content-between top-buffer ">
+                    <div class="col-lg-12">
+                        <h2>Playlist seguite </h2>
+                        <ul class="post-meta mt-3">
+                            <li class="d-inline-block mr-3">
+                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
+                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
+                                <a class="ml-1" href="#">Playlist degli altri utenti</a>
+                            </li>
+                        </ul>
+
+                        <div class="row top-buffer-s right-buffer">
+                            <!-- qua metto la card della playlist -->
+                            <div class="row top-buffer-s right-buffer" id="playlistSeguiteContainer">
+                                <div class="col-xl-2 col-md-4 d-none top-buffer-s" id="card-playlistSeguite">
+                                    <div class="card  cardSelezionabile bg-dark p-3 h-100">
+                                        <!-- questa immagine deve venire modificata se ci sono canzoni nella playlist -->
+                                        <img class="card-img    bg-dark" src="images/nota.png" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">artista</h5>
+                                            <p class="card-text">utente autore</p>
+                                            <a id="albumLink" class="stretched-link" title="Click to do something"
+                                                href="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
 
                         <!-- end of post-item -->
                     </div>
-
                     <!-- <div class="col-lg-4 col-md-5"> se volessi mettere una colonna a destra nella pagina</div> -->
                 </div>
+
+
+
+
+
             </div>
 
 
@@ -317,6 +353,7 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
         function start() {
             loginSiNo();
             popolaPlaylist();
+            popolaPlaylistSeguite();
         }
 
 
@@ -377,64 +414,107 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                     playlists = searchResults
                 })
 
-                // ora ho playlists che è la lista di playlist dell utente
-                var card = document.getElementById("card-playlist");
-                var cont = document.getElementById("playlistContainer");
-                let img;
-                cont.append(card)
-                for (var i = 0; i < playlists.length; i++) {
-                    var clone = card.cloneNode(true)
-                    clone.id = "numeroPlaylist" + i;
-                    clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
-                    clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist;
-                    
-                    // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
-                    //     console.log(i)
-                    //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
-                    //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
-                    // })
-                    
-                    
-                    
-                    img = await immaginePlaylist(playlists[i].nomePlaylist) // queste due funzionano ma sono lente
-                    if(img)    clone.getElementsByClassName("card-img")[0].src = img
+            // ora ho playlists che è la lista di playlist dell utente
+            var card = document.getElementById("card-playlist");
+            var cont = document.getElementById("playlistContainer");
+            let img;
+            cont.append(card)
+            for (var i = 0; i < playlists.length; i++) {
+                var clone = card.cloneNode(true)
+                clone.id = "numeroPlaylist" + i;
+                clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist;
 
-                    clone.classList.remove('d-none');
-                    card.after(clone);
-                }
+                // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
+                //     console.log(i)
+                //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
+                //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
+                // })
+
+
+                img = await immaginePlaylist(playlists[i].nomePlaylist, localStorage.getItem("loginEmail") ) // queste due funzionano ma sono lente
+                if (img) clone.getElementsByClassName("card-img")[0].src = img
+
+                clone.classList.remove('d-none');
+                card.after(clone);
+            }
         }
 
-        async function immaginePlaylist (nomePlaylist) {
-                let email = localStorage.getItem("loginEmail")
-                let canzoni;  // sarà le prime 4 canzoni della playlist
-                await fetch('http://127.0.0.1:3000/playlist/' + email + '/' + nomePlaylist + '/' + 4, {
+        async function immaginePlaylist(nomePlaylist, email) {
+            let canzoni;  // sarà le prime 4 canzoni della playlist
+            await fetch('http://127.0.0.1:3000/playlist/' + email + '/' + nomePlaylist + '/' + 4, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    canzoni = searchResults
+                })
+
+            if (canzoni.length > 0) { // se la playlist è vuota resituirò null direttamente
+                let img;
+                // fetch all api di spotify, controllare prima il token
+                await fetch("https://api.spotify.com/v1/tracks/" + canzoni[0].idCanzone, { // prima provo prendendo solo la prima canzone
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token"),
                     },
                 })
                     .then((response) => response.json())
                     .then((searchResults) => {
-                        canzoni = searchResults
+                        img = searchResults.album.images[0].url;
                     })
-
-                    if (canzoni.length > 0) { // se la playlist è vuota resituirò null direttamente
-                                let img;
-                                // fetch all api di spotify, controllare prima il token
-                                await fetch("https://api.spotify.com/v1/tracks/" + canzoni[0].idCanzone, { // prima provo prendendo solo la prima canzone
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: "Bearer " + localStorage.getItem("token"),
-                                    },
-                                })
-                                    .then((response) => response.json())
-                                    .then((searchResults) => {
-                                        img = searchResults.album.images[0].url;
-                                    })
-                                    return img
-                        }
-                        return null;        
+                return img
             }
-        
+            return null;
+        }
+
+
+
+        // PLAYLIST SEGUITE
+
+        async function popolaPlaylistSeguite() {
+            let emailUtente = localStorage.getItem("loginEmail")
+            let playlists;
+            console.log("funzione chiamata")
+            await fetch('http://127.0.0.1:3000/playlistSeguiteDallUtente/' + emailUtente, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    playlists = searchResults
+                })
+            // ora ho playlists che è la lista di playlist seguite dell utente
+            console.log(playlists)
+            var card = document.getElementById("card-playlistSeguite");
+            var cont = document.getElementById("playlistSeguiteContainer");
+            let img;
+            cont.append(card)
+            for (var i = 0; i < playlists.length; i++) {
+                var clone = card.cloneNode(true)
+                clone.id = "numeroPlaylist" + i;
+                clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
+                clone.getElementsByClassName("card-text")[0].innerHTML = playlists[i].emailAutorePlaylist;
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist  + "&email=" + playlists[i].emailAutorePlaylist;
+
+                // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
+                //     console.log(i)
+                //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
+                //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
+                // })
+
+
+
+                img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailAutorePlaylist ) // queste due funzionano ma sono lente
+                if (img) clone.getElementsByClassName("card-img")[0].src = img
+
+                clone.classList.remove('d-none');
+                card.after(clone);
+            }
+        }
 
 
 

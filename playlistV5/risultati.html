@@ -67,22 +67,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai Home</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Nunzio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Santini</a>
-                    </li> -->
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
 
 
                     <li class="nav-item">
-
-                        <!-- <form class="d-flex" role="search">
-                            <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="search"
-                                placeholder="Search" aria-label="Search">
-                        </form> -->
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
                                 placeholder="Search" aria-label="Search" />
@@ -132,20 +121,13 @@
         <!-- start of sidenav -->
         <aside>
             <div class="sidenav position-sticky d-flex flex-column justify-content-between">
-                <!-- <a class="navbar-brand" href="index.html" class="logo">
-                    <img src="images/lsogo.png" alt="">
-                </a> -->
                 <!-- end of navbar-brand -->
-
                 <div class="navbar navbar-dark my-4 p-0 font-primary">
                     <ul class="navbar-nav w-100">
                         <!-- <li class="nav-item "> -->
                         <li class="nav-item top-buffer-xl">
                             <a class="nav-link text-white px-0 pt-0" href="listaArtistiPreferiti">Artisti</a>
                         </li>
-                        <!-- <li class="nav-item ">
-                            <a class="nav-link text-white px-0" href="about.html">Album</a>
-                        </li> -->
                         <li class="nav-item ">
                             <a class="nav-link text-white px-0" href="listaPlaylist">Playlist</a>
                         </li>
@@ -188,11 +170,6 @@
             <header class="mobile-nav pt-4">
                 <div class="container">
                     <div class="row align-items-center">
-                        <!-- <div class="col-6">
-                            <a href="index.html">
-                                <img src="images/logo.png" alt="">
-                            </a>
-                        </div> -->
                         <div class="col-6 text-right">
                             <button class="nav-toggle bg-transparent border text-white">
                                 <span class="fas fa-bars"></span>
@@ -309,14 +286,11 @@
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
                                 <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <a class="ml-1" href="#">Album (e playlist ??)</a>
+                                <a class="ml-1" href="#">Album</a>
                             </li>
                         </ul>
 
                         <!-- QUA CI SONO I RISULTATI DELLA RICERCA     ALBUM -->
-
-
-
                         <div class="row top-buffer-s right-buffer" id="albumContainer">
                             <div class="col-xl-2 col-md-4 d-none" id="card-album">
                                 <div class="card cardSelezionabile bg-dark p-3 h-100">
@@ -335,9 +309,53 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- SI POTREBBE ANCHE PROVARE A METTERE DELLE CARD ORIZZONTALI PIU' GRANDI -->
                     </div>
                 </div>
+
+
+
+
+                <div class="row justify-content-between">
+                    <!-- <div class="col-lg-7"> --> <!--alcune cose non saranno a tutto schermo orizzontalmente-->
+                    <div class="col-lg-12">
+                        <!-- <h2>Risultati della ricerca </h2> -->
+                        <ul class="post-meta mt-3">
+                            <li class="d-inline-block mr-3">
+                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
+                                <a class="ml-1" href="#">Playlist</a>
+                            </li>
+                        </ul>
+
+                        <!-- QUA CI SONO I RISULTATI DELLA RICERCA     PLAYLIST -->
+                        <div class="row top-buffer-s right-buffer" id="playlistContainer">
+                            <div class="col-xl-2 col-md-4 d-none" id="card-playlist">
+                                <div class="card cardSelezionabile bg-dark p-3 h-100">
+                                    <img class="card-img    bg-dark" src="images/faces.jpg" alt="Card image cap">
+                                    <!-- <img class="card-img    bg-dark"  alt="Card image cap"> -->
+                                    <div class="card-body">
+                                        <h5 class="card-title">Playlist titolo</h5>
+                                        <p class="card-text">utente Username</p>
+                                        <a id="albumLink" class="stretched-link" title="Click to do something" href=""
+                                            action="risultati" method="GET">
+                                        </a>
+                                    </div>
+                                    <!-- <div class="card-footer">
+                                        <small class="text-muted">Data di uscita</small>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
             </div>
 
 
@@ -414,15 +432,14 @@
             loginSiNo();
             await elencoPlaylistDropdown();
             ricerca();
+            ricercaPlaylist(); // faccio un altra funzione a parte per le playlist per non avere tutte le funzioni dentro ricerca
         }
-
 
 
 
 
         function ricerca() {
             //la prima cosa che devo vedere è se il token è scaduto o no, se lo è ne prendo uno nuovo
-
 
             let tmp = new URLSearchParams(location.search);
             let searchParams = tmp.get("ricerca")
@@ -528,8 +545,82 @@
                 }
                 )
             // POTREI METTERE LE TRE FETCH IN TRE FUNZIONI SEPARATE E CHIAMARLE DALLA FUNZIONE ricerca
-
         }
+
+
+
+        // QUESTA PARTE QUA RIGUARDA SOLO LE PLAYLIST
+        // è pratifamente uguale alla funzione popolaPlaylist, cambia solo il tipo di fetch e qua aggiungo alla card l email utente ( e al link)
+        async function ricercaPlaylist() {
+            let playlists;
+            let tmp = new URLSearchParams(location.search);
+            let nomePlaylist = tmp.get("ricerca")
+
+            await fetch('http://127.0.0.1:3000/playlist/' + nomePlaylist, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    playlists = searchResults
+                })
+            // console.log(playlists)
+            // ora ho playlists che è la lista di playlist con un determinato nome
+            var card = document.getElementById("card-playlist");
+            var cont = document.getElementById("playlistContainer");
+            let img;
+            cont.append(card)
+            for (var i = 0; i < playlists.length; i++) {
+                var clone = card.cloneNode(true)
+                clone.id = "numeroPlaylist" + i;
+                clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
+                // sarebbe meglio aggiungere l username al link della playlist e non l email dell utente , ma per come l ho 
+                // fatto l username non è unico mentre l email si
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist + "&email=" + playlists[i].emailUtente ;
+                clone.getElementsByClassName('card-text')[0].innerHTML = playlists[i].emailUtente;
+
+                img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailUtente) // queste due funzionano ma sono lente
+                if (img) clone.getElementsByClassName("card-img")[0].src = img
+
+                clone.classList.remove('d-none');
+                card.after(clone);
+            }
+        }
+
+
+        // praticamente uguale a immagine playlist della pagina con le playuìlist dell utente, questa ha che l email arriva come
+        // paramettro, fare la stessa cosa anche nell altra e renderle una sola funzione
+        async function immaginePlaylist (nomePlaylist, email) {
+                let canzoni;  // sarà le prime 4 canzoni della playlist
+                await fetch('http://127.0.0.1:3000/playlist/' + email + '/' + nomePlaylist + '/' + 4, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((searchResults) => {
+                        canzoni = searchResults
+                    })
+
+                    if (canzoni.length > 0) { // se la playlist è vuota resituirò null direttamente
+                                let img;
+                                // fetch all api di spotify, controllare prima il token
+                                await fetch("https://api.spotify.com/v1/tracks/" + canzoni[0].idCanzone, { // prima provo prendendo solo la prima canzone
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: "Bearer " + localStorage.getItem("token"),
+                                    },
+                                })
+                                    .then((response) => response.json())
+                                    .then((searchResults) => {
+                                        img = searchResults.album.images[0].url;
+                                    })
+                                    return img
+                        }
+                        return null;        
+            }
+
 
 
     </script>

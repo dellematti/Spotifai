@@ -80,8 +80,12 @@ async function loginSiNo() {
     // console.log(nomeUtente)
 
     document.getElementById("bottoneLogout").innerHTML = nomeUtente
+    return true;
   } else {
-    document.getElementById("out").style.display = "none"; //invece se non sono loggato nascondo il tasto logout          
+    document.getElementById("out").style.display = "none"; //invece se non sono loggato nascondo il tasto logout  
+    document.getElementById("linkArtisti").href = "/login"; 
+    document.getElementById("linkPlaylist").href = "/login";  
+    return false;
   }
 }
 

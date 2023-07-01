@@ -241,11 +241,12 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                             <!-- per eliminare tutta la playlist -->
                             <!-- IMPORTANTE: deve uscire questo se la playlist è tua, altrimenti  "smetti di seguire" -->
                             <div class="col-lg-7">
-                                <h2 class="top-buffer">Vuoi eliminare questa playlist? </h2>
+                                <h2 id="elimina" class="top-buffer">Vuoi eliminare questa playlist? </h2>
                                 <!-- <button class="btn btn-primary top-buffer-s" value="" onclick="eliminaPlaylist()">Elimina</button> -->
 
                                 <!-- questo div serve per avere la conferma di eliminare -->
-                                <button onclick="document.getElementById('id01').style.display='block'"
+                                <button id="tastoElimina"
+                                    onclick="document.getElementById('id01').style.display='block'"
                                     class="top-buffer-s btn btn-primary">Elimina</button>
                                 <div id="id01" class="modal">
                                     <span onclick="document.getElementById('id01').style.display='none'" class="close"
@@ -344,27 +345,128 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
     <script src="js/script.js"></script>
     <script>
 
-        function start() {
-            loginSiNo();
-            let email = localStorage.getItem("loginEmail")
+        async function start() {
+            loggato = await loginSiNo();
             let nomePlaylist = new URLSearchParams(location.search).get("playlist")
+            let email = new URLSearchParams(location.search).get("email")
+            if (email == null) email = localStorage.getItem("loginEmail")  // questo se è loggato
+            else { 
+                tastoModifica(); // ALLORA non sono nella mia playlist, quindi non posso modificarla e cancellarla, ma posso seguirla
+                controllaSeguita(email, nomePlaylist)  //controllo se la playlist è seguita o no (l email qua è del autore)
+            }
             ottieniCanzoni(email, nomePlaylist);
-            mostraNomePlaylist();
+            mostraNomePlaylist(nomePlaylist);
         }
 
 
         // mette il nome della playlist in alto nella pagina
-        function mostraNomePlaylist() {
-            let nomePlaylist = new URLSearchParams(location.search).get("playlist")
+        function mostraNomePlaylist(nomePlaylist) {
             document.getElementById("titoloPlaylist").innerHTML = nomePlaylist
+        }
+
+        // modifica il tasto per eliminare la playlist, e lo fa diventare il tasto per seguirla
+        function tastoModifica() {
+            // document.getElementById("elimina").remove()
+            document.getElementById("elimina").innerHTML = "Vuoi seguire questa playlist?"
+            document.getElementById("tastoElimina").innerHTML = "Segui"
+            document.getElementById("tastoElimina").setAttribute("onclick", "segui()")
+        }
+
+
+        // segui la playlist
+        async function segui() {
+            let emailUtente = localStorage.getItem("loginEmail")
+            let nomePlaylist = new URLSearchParams(location.search).get("playlist");
+            let emailAutorePlaylist = new URLSearchParams(location.search).get("email");
+
+            let data = {
+                emailUtente: emailUtente,
+                nomePlaylist: nomePlaylist,
+                emailAutorePlaylist: emailAutorePlaylist
+            }
+            console.log(data)
+            await fetch("http://127.0.0.1:3000/playlist/playlistSeguite?apikey=123456", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(async response => {
+                if (response.ok) {
+                    console.log("ora segui la playlist")
+                } else {
+                    response.text().then(text =>
+                        alert(text + " qualcosa non ha funzionato nel seguire la playlist, la risposta arriva da playlist.html")
+                    )
+                }
+            })
+            document.getElementById("tastoElimina").innerHTML = "Non seguire piu"
+            document.getElementById("elimina").innerHTML = "Vuoi smettere di seguire questa playlist?"
+            document.getElementById("tastoElimina").setAttribute("onclick", "rimuoviSeguite()")
+        }
+
+
+        // controlla se la playlist è tra le seguite, se si modifica il bottone da "aggiungi a preferiti" a "rimuovi da preferiti"
+        async function controllaSeguita(emailAutorePlaylist, nomePlaylist) {
+            if (loggato != true) return; //se non sono loggato non controllo
+            let emailUtente = localStorage.getItem("loginEmail")
+            let presente = false;
+            await fetch("http://127.0.0.1:3000/playlist/playlistSeguita/" + emailUtente + "/" + nomePlaylist + "/" + emailAutorePlaylist , {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    console.log(searchResults)
+                    if (searchResults) {
+                        document.getElementById("tastoElimina").innerHTML = "Non seguire piu"
+                        document.getElementById("elimina").innerHTML = "Vuoi smettere di seguire questa playlist?"
+                        document.getElementById("tastoElimina").setAttribute("onclick", "rimuoviSeguite()")
+                    } else {
+                        // console.log("L artista non era tra i preferiti")
+                    }
+                })
+        }
+
+
+        
+        // rimuove la playlist tra quelle seguite dell utente
+        async function rimuoviSeguite(card) {
+            let emailUtente = localStorage.getItem("loginEmail")
+            let nomePlaylist = new URLSearchParams(location.search).get("playlist");
+            let emailAutorePlaylist = new URLSearchParams(location.search).get("email");
+            await fetch("http://127.0.0.1:3000/playlist/playlistSeguita/" + emailUtente + "/" + nomePlaylist + "/" + emailAutorePlaylist , {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    //se il record è stato effettivamente eliminato, allora searchResults.acknowledged == true
+                    if (searchResults.acknowledged) {
+                        document.getElementById("tastoElimina").innerHTML = "Segui"
+                        document.getElementById("elimina").innerHTML = "Vuoi seguire questa playlist?"
+                        document.getElementById("tastoElimina").setAttribute("onclick", "segui()")
+                    } else {
+                        console.log("Il record non è stato eliminato correttamente dal database")
+                    }
+                })
         }
 
 
 
-        // elimina tutta la playlist dell utente
-        // ( se aggiungo che un utente può seguire le playlist degli altri, se la elimino, la elimino per tutti)
+
+
+
+        // FINE FUNZIONI SEGUI
+        // SE SONO SULLA MIA PLAYLIST SI POTRANNO USARE LE FUNZIONI SOTTO E NON QUELLE SOPRA PER SEGUIRE
+
+
+        // elimina tutta la playlist dell utente (se la elimino, la elimino per tutti gli utenti che la seguono)
         function eliminaPlaylist(flag) {
-            // console.log(flag)
             let nomePlaylist = new URLSearchParams(location.search).get("playlist")
             let email = localStorage.getItem("loginEmail")
             if (!flag) {
@@ -394,21 +496,12 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                                         window.location.replace("/listaPlaylist")
                                     } else {
                                         alert("Il record non è stato eliminato correttamente dal database")
-                                        // console.log("Il record non è stato eliminato correttamente dal database")
                                     }
-
                                 })
-
-
                         } else {
                             alert("Il record non è stato eliminato correttamente dal database")
-                            // console.log("Il record non è stato eliminato correttamente dal database")
                         }
                     })
-
-
-
-
             }
         }
 
@@ -421,22 +514,10 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
 
 
-
-
-
-
-
-
-
-
         // elimino una canzone dalla playlist se clicco sul cestino
         function eliminaCanzone(idCanzone) {
             let nomePlaylist = new URLSearchParams(location.search).get("playlist")
             let email = localStorage.getItem("loginEmail")
-            // console.log(idCanzone)
-            // console.log(nomePlaylist)
-            // console.log(email)
-
             // fetch per cancellare una canzone
             fetch("http://127.0.0.1:3000/playlist/cancellaCanzoneSingola/" + email + "/" + idCanzone + "/" + nomePlaylist, {
                 method: 'DELETE',
@@ -451,13 +532,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                         location.reload()
                     } else {
                         alert("Il record non è stato eliminato correttamente dal database")
-                        // console.log("Il record non è stato eliminato correttamente dal database")
                     }
                 })
-
-
-
-
         }
 
 
@@ -477,16 +553,19 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
 
         // crea le varie card delle canzoni della playlist, dato un array di canzoni
+        // in base a se la playlist è mia o no ci sarà il modo di cancellare canzoni
         async function mostraCanzoni(canzoni) {
             var card = document.getElementById("card-canzone");
             var cont = document.getElementById("canzoneContainer");
             cont.innerHTML = "";
             cont.append(card)
+            let playlistMia = false;
+            if (new URLSearchParams(location.search).get("email") == null) playlistMia = true; // se non cè l utente nel url allora è mia
+
+            // credo che l unica alternativa a fare la fetch nel for sia salvare tutto nel mio database
             for (var i = 0; i < canzoni.length; i++) {
                 var clone = card.cloneNode(true)
                 clone.id = "canzone " + i;
-
-
                 await fetch("https://api.spotify.com/v1/tracks/" + canzoni[i].idCanzone, {// ora per ogni canzone devo fare fetch a spotify con id canzone
                     headers: {
                         "Content-Type": "application/json",
@@ -495,15 +574,18 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                 })
                     .then((response) => response.json())
                     .then((searchResults) => {
-                        console.log(searchResults)
+                        // console.log(searchResults)
                         clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
 
                         clone.getElementsByClassName('link')[0].innerHTML = searchResults.artists[0].name;
                         clone.getElementsByClassName('link')[0].href = "/artista?artista=" + searchResults.artists[0].id;
                         clone.getElementsByClassName("card-img")[0].src = searchResults.album.images[0].url;
                         clone.getElementsByClassName("btn")[0].setAttribute("value", searchResults.id)
-                        clone.getElementsByClassName("btn")[1].setAttribute("value", searchResults.id)
-                        
+                        if (playlistMia == true)
+                            clone.getElementsByClassName("btn")[1].setAttribute("value", searchResults.id)
+                        else
+                            clone.getElementsByClassName("btn")[1].remove()
+
                         // clone.getElementsByClassName('text-muted')[0].innerHTML = searchResults.tracks.items[i].album.name;
                     })
                 // clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + searchResults[i].nomePlaylist;

@@ -109,7 +109,7 @@ nav ul li ul {
 }
 
 /* mi dava di default il colore grigio scuro altrimenti (forse per l altro foglio css?) */
-h2, h6{
+h2, h3, h6{
     color:#ffffff;
 }
 
@@ -278,3 +278,25 @@ a.stretched-link:before {
     z-index: 3;
 }
 
+
+
+
+
+/* immagine dell artista consigliato nell homepage */
+/* #artista#imgArtista:hover { */
+#artista:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    transition: 400ms;
+    z-index: 100;  
+    
+}
+
+
+#artista {
+    transition: 400ms;
+}
+
+#utente {
+    background-color: #121212;
+}

@@ -155,7 +155,7 @@ app.post("/users/login", auth, async function  (req, res) {
     console.log("sono nel post di userlogin e ho controllato")
     // await checkUser(res, req.body)
 
-    const user = req.body
+    var user = req.body
 
     if (!user.email) {
         res.status(400).send("Missing Email")
@@ -264,6 +264,10 @@ app.get('/listaPlaylist', function (req, res) {  //qua avremo la pagina con tutt
 
 app.get('/playlist', function (req, res) {  // pagina con una singola playlist
     res.sendFile(path.join(__dirname, '/playlist.html'));   
+});
+
+app.get('/utente', function (req, res) {  // pagina per la gestione utente
+    res.sendFile(path.join(__dirname, '/utente.html'));   
 });
 
 
@@ -594,6 +598,61 @@ app.delete("/playlist/cancellaPlaylist/:emailUtente/:nomePlaylist", async functi
         res.status(500).send(`Errore generico: ${e}`)
     }
 })
+
+
+
+
+
+// UTENTE
+
+
+// cancella un utente dal db, dovrò cancellare anche le playlist e artisti preferiti
+app.delete("/users/cancellaUtente/:emailUtente/:password", async function (req, res)  {
+
+
+})
+
+// aggiorna l username dell utente se la password è corretta
+app.post("/users/aggiornaUsername",  auth, async function (req, res)  {
+
+
+    console.log("sto modificando l username dell utente")
+
+    if (!req.body.username) {
+        res.status(400).send("Manca l' username dell utente")
+        return
+    }
+    if (!req.body.email ) {
+        res.status(400).send("Manca l id della canzone")
+        return
+    }
+    if (!req.body.password ) {
+        res.status(400).send("Manca il nome della playlist")
+        return
+    }
+
+
+    req.body.password = hash(req.body.password)
+    var pwmClient = await new mongoClient(uri).connect()
+    try {
+        var presente = await pwmClient.db("spotifai").collection('utenti').findOne({email:req.body.email, password: req.body.password })
+        if ( presente) {
+            var items = await pwmClient.db(db).collection('utenti')
+                .updateOne({email:req.body.email, password: req.body.password },   {$set:{username:req.body.username}}  )
+            res.json(items)
+        }else {
+            // qua sto dando per scontato che l email che mi arriva sia sempre corretta, dovrei controllare anche
+            // quella e fare due casi separati  
+            res.status(400).send("la password inserita non è corretta")
+        }
+    }
+    catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+    };
+
+})
+
 
 
 

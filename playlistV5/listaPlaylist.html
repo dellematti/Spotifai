@@ -230,6 +230,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                                             <a id="albumLink" class="stretched-link" title="Click to do something"
                                                 href="">
                                             </a>
+                                            <button value="" onclick="rendiPrivata(this)" id="bottonePubblicaPrivata"
+                                                class=" btn btn-primary top-buffer-s second-link">Rendi privata</button>
                                         </div>
                                     </div>
                                 </div>
@@ -357,6 +359,77 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
         }
 
 
+        // FUNZIONI PLAYLIST PUBBLICHE O PRIVATE
+
+        // imposta il bottone di ogni playlist in base alla fatto che la playlist sia privata o pubblica
+        function pubblicaPrivata () {
+
+        }
+
+
+        function rendiPrivata(bottonePlaylist) {
+            bottonePlaylist.innerHTML = "Rendi pubblica"
+            bottonePlaylist.setAttribute("onclick", "rendiPubblica(this)")
+
+            let email = localStorage.getItem("loginEmail")
+            let data = {
+                emailUtente: email,
+                nomePlaylist: bottonePlaylist.value,
+            }
+            fetch('http://127.0.0.1:3000/playlist/rendiPrivata/', {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(async response => {
+                if (response.ok) {
+                    console.log("la playlist ora è privata")
+                } else {
+                    response.text().then(text =>
+                        alert(text + " la risposta arriva da listaPlaylist.html")
+                    )
+                }
+            })            
+        }
+
+
+        function rendiPubblica (bottonePlaylist) {
+            console.log("sono in rendi pubblica")
+            bottonePlaylist.innerHTML = "Rendi privata"
+            bottonePlaylist.setAttribute("onclick", "rendiPrivata(this)")
+
+            let email = localStorage.getItem("loginEmail")
+            let data = {
+                emailUtente: email,
+                nomePlaylist: bottonePlaylist.value,
+            }
+            fetch('http://127.0.0.1:3000/playlist/rendiPubblica/', {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(async response => {
+                if (response.ok) {
+                    console.log("la playlist ora è pubblica")
+                } else {
+                    response.text().then(text =>
+                        alert(text + " la risposta arriva da listaPlaylist.html")
+                    )
+                }
+            })
+        }
+
+
+
+        // FINE FUNZIONI PLAYLIST PUBBLICHE O PRIVATE
+
+
+
+
+        // NUOVA PLAYLIST
+
         // controlla se esiste già una playlist con un certo nome associata all utente, se non c è la aggiunge
         function controllaPlaylist() {
             var nome = document.getElementById('nuovaPlaylist').value;
@@ -379,7 +452,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
             let data = {
                 emailUtente: email,
-                nomePlaylist: nome
+                nomePlaylist: nome,
+                pubblica: true
             }
             await fetch('http://127.0.0.1:3000/playlist/playlistUtente/', {
                 method: "POST",
@@ -399,6 +473,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
             location.reload() //avendo aggiunto una playlist devo ricaricare la pagina
         }
 
+
+        //  FINE NUOVA PLAYLIST
 
 
         async function popolaPlaylist() {
@@ -424,6 +500,15 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                 clone.id = "numeroPlaylist" + i;
                 clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
                 clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist;
+
+                // clone.getElementsByClassName("btn")[1].setAttribute("value", searchResults.id)
+                clone.getElementsByClassName("btn")[0].setAttribute("value", playlists[i].nomePlaylist)
+                console.log(playlists[i])
+                if( ! playlists[i].pubblica) { 
+                    clone.getElementsByClassName("btn")[0].innerHTML = "Rendi pubblica"
+                    clone.getElementsByClassName("btn")[0].setAttribute("onclick", "rendiPubblica(this)")
+                
+                }
 
                 // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
                 //     console.log(i)
@@ -494,21 +579,16 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
             let img;
             cont.append(card)
             for (var i = 0; i < playlists.length; i++) {
+                let emailAutorePlaylist = playlists[i].emailUtente
+
                 var clone = card.cloneNode(true)
                 clone.id = "numeroPlaylist" + i;
                 clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
-                clone.getElementsByClassName("card-text")[0].innerHTML = playlists[i].emailAutorePlaylist;
-                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist  + "&email=" + playlists[i].emailAutorePlaylist;
+                clone.getElementsByClassName("card-text")[0].innerHTML = emailAutorePlaylist;
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist  + "&email=" + emailAutorePlaylist;
 
-                // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
-                //     console.log(i)
-                //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
-                //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
-                // })
-
-
-
-                img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailAutorePlaylist ) // queste due funzionano ma sono lente
+                img = await immaginePlaylist(playlists[i].nomePlaylist, emailAutorePlaylist ) // queste due funzionano ma sono lente
+                // img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailAutorePlaylist ) // queste due funzionano ma sono lente
                 if (img) clone.getElementsByClassName("card-img")[0].src = img
 
                 clone.classList.remove('d-none');

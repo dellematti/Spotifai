@@ -464,8 +464,8 @@ app.get("/playlist/:nome?", async function (req, res) {
     console.log(nomePlaylist)
     let pwmClient = await new mongoClient(uri).connect()
     try {
-        // faccio la project perche non serve restituire l id della playlist
-        let playlist = await pwmClient.db("spotifai").collection('playlist').find({ nomePlaylist: nomePlaylist }).project({ _id: 0 }).toArray()
+        // faccio la project perche non serve restituire l id della playlist, e restituisco solo le playlist pubbliche
+        let playlist = await pwmClient.db("spotifai").collection('playlist').find({ nomePlaylist: nomePlaylist, pubblica:true }).project({ _id: 0 }).toArray()
         console.log(playlist)
         res.send(playlist)
     }
@@ -697,14 +697,94 @@ app.get("/playlistSeguiteDallUtente/:emailUtente", async function (req, res) {
     let pwmClient = await new mongoClient(uri).connect()
     try {
         // faccio la project perche restituisco solo l il nome della playlist, non anche la email utente
-        let playlist = await pwmClient.db("spotifai").collection('playlistSeguite').find({ emailUtente: emailUtente }).project({ emailUtente: 0, _id: 0 }).toArray()
-        res.send(playlist)
+        let playlist = await pwmClient.db("spotifai").collection('playlistSeguite').find({ emailUtente: emailUtente}).project({ emailUtente: 0, _id: 0 }).toArray()
+        
+        console.log(playlist)
+        let playlistPubbliche = [];
+        // per ogni playlist seguita vedo se è pubblica
+        // se seguo la playlist e dopo il proprietario la mette privata, la seguirò comunque ma non potrò vederla
+        // non la cancello dalle playlist seguite perche se poi torna pubblica la riavrò ancora tra le mie playlist
+        for (let i = 0; i < playlist.length; i++) {
+            let tmp = await pwmClient.db("spotifai").collection('playlist')
+                .find({ emailUtente: playlist[i].emailAutorePlaylist, nomePlaylist: playlist[i].nomePlaylist, pubblica:true})
+                .project({ pubblica: 0, _id: 0 }).toArray()
+            playlistPubbliche = playlistPubbliche.concat(tmp)
+        }
+        console.log("tutte", playlist)
+        console.log("pubbliche", playlistPubbliche)
+        // res.send(playlist)
+        res.send(playlistPubbliche)
     }
     catch (e) {
         console.log('catch in test');
         res.status(500).send(`Errore generico: ${e}`)
     };
 });
+
+
+// PLAYLIST PUBBLICA O PRIVATA
+
+
+//IN TUTTO QUESTO FILE (DA RIGA 0 A L ULTIMA) METTERE CHE LE DELETE E PUT NON RICEVONO I PARAMETRI DALL URL
+
+
+
+// rende la playlist di un certo utente privata
+app.put("/playlist/rendiPrivata", async function (req, res) {
+    if (!req.body.emailUtente) {
+        res.status(400).send("Manca l' email")
+        return
+    }
+    if (!req.body.nomePlaylist) {
+        res.status(400).send("Manca il nomePlaylist")
+        return
+    }
+    try {
+        var pwmClient = await new mongoClient(uri).connect()
+        var filter = { emailUtente: req.body.emailUtente, nomePlaylist: req.body.nomePlaylist  }
+        let updatePlaylist = {
+            $set: {pubblica:false}
+        }
+        var item = await pwmClient.db("spotifai")
+            .collection('playlist')
+            .updateOne(filter, updatePlaylist)
+        res.send(item)
+    } catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+
+    };
+})
+
+// rende la playlist di un certo utente pubblica    (è identica alla funzione sopra ma il filter è impostato a true)
+// si potrebbe fare una sola put che riceve come parametro true o false 
+app.put("/playlist/rendiPubblica", async function (req, res) {
+    if (!req.body.emailUtente) {
+        res.status(400).send("Manca l' email")
+        return
+    }
+    if (!req.body.nomePlaylist) {
+        res.status(400).send("Manca il nomePlaylist")
+        return
+    }
+    try {
+        var pwmClient = await new mongoClient(uri).connect()
+        var filter = { emailUtente: req.body.emailUtente, nomePlaylist: req.body.nomePlaylist  }
+        let updatePlaylist = {
+            $set: {pubblica:true}
+        }
+        var item = await pwmClient.db("spotifai")
+            .collection('playlist')
+            .updateOne(filter, updatePlaylist)
+        res.send(item)
+    } catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+
+    };
+})
+
+
 
 
 // UTENTE

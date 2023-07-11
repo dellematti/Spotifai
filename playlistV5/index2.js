@@ -270,6 +270,10 @@ app.get('/utente', function (req, res) {  // pagina per la gestione utente
     res.sendFile(path.join(__dirname, '/utente.html'));
 });
 
+app.get('/playlistPubbliche', function (req, res) {  // pagina con tutte le playlist pubbliche dei vari utenti
+    res.sendFile(path.join(__dirname, '/playlistPubbliche.html'));
+});
+
 
 
 
@@ -416,6 +420,22 @@ app.get("/playlist/playlistUtente/:email", async function (req, res) {
     try {
         // faccio la project perche restituisco solo l il nome della playlist, non anche la email utente
         let playlist = await pwmClient.db("spotifai").collection('playlist').find({ emailUtente: id }).project({ emailUtente: 0, _id: 0 }).toArray()
+        res.send(playlist)
+    }
+    catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+    };
+});
+
+
+// restituisce tutte le playlist pubbliche esistenti
+app.get("/playlist/playlistPubbliche", async function (req, res) {
+    let pwmClient = await new mongoClient(uri).connect()
+    try {
+        // faccio la project perche restituisco solo l il nome della playlist, non anche la email utente
+        let playlist = await pwmClient.db("spotifai").collection('playlist')
+            .find({ pubblica: true }).project({pubblica: 0,  _id: 0 }).toArray()
         res.send(playlist)
     }
     catch (e) {

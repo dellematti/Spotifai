@@ -206,76 +206,28 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                         </ul>
 
                         <div class="row top-buffer-s right-buffer">
-                            <!-- card fissa per creare una playlist -->
-                            <div class="row top-buffer-s right-buffer" id="playlistContainer">
-                                <div class="col-xl-2 col-md-4  top-buffer-s" id="">
-                                    <div class="card  cardSelezionabile bg-dark p-3 h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Crea nuova playlist</h5>
-                                            <form class="top-buffer" action="javascript:controllaPlaylist();">
-                                                <input class=" form-control me-2 bg-dark" type="text"
-                                                    id="nuovaPlaylist">
-                                            </form>
-                                        </div>
+                        <!-- QUA CI SONO I RISULTATI DELLA RICERCA     PLAYLIST -->
+                        <div class="row top-buffer-s right-buffer" id="playlistContainer">
+                            <div class="col-xl-2 col-md-4 d-none" id="card-playlist">
+                                <div class="card cardSelezionabile bg-dark p-3 h-100">
+                                    <img class="card-img    bg-dark" src="images/nota.png" alt="Card image cap">
+                                    <!-- <img class="card-img    bg-dark"  alt="Card image cap"> -->
+                                    <div class="card-body">
+                                        <h5 class="card-title">Playlist titolo</h5>
+                                        <p class="card-text">utente Username</p>
+                                        <a id="albumLink" class="stretched-link" title="Click to do something" href=""
+                                            action="risultati" method="GET">
+                                        </a>
                                     </div>
+                                    <!-- <div class="card-footer">
+                                        <small class="text-muted">Data di uscita</small>
+                                    </div> -->
                                 </div>
-
-                                <!-- qua metto la card della playlist -->
-                                <div class="col-xl-2 col-md-4 d-none top-buffer-s" id="card-playlist">
-                                    <div class="card  cardSelezionabile bg-dark p-3 h-100">
-                                        <!-- questa immagine deve venire modificata se ci sono canzoni nella playlist -->
-                                        <img class="card-img    bg-dark" src="images/nota.png" alt="Card image cap">
-                                        <div class="card-body">
-                                            <h5 class="card-title">artista</h5>
-                                            <a id="albumLink" class="stretched-link" title="Click to do something"
-                                                href="">
-                                            </a>
-                                            <button value="" onclick="rendiPrivata(this)" id="bottonePubblicaPrivata"
-                                                class=" btn btn-primary top-buffer-s second-link">Rendi privata</button>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-between top-buffer ">
-                    <div class="col-lg-12">
-                        <h2>Playlist seguite </h2>
-                        <ul class="post-meta mt-3">
-                            <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Playlist degli altri utenti</a>
-                            </li>
-                        </ul>
-
-                        <div class="row top-buffer-s right-buffer">
-                            <!-- qua metto la card della playlist -->
-                            <div class="row top-buffer-s right-buffer" id="playlistSeguiteContainer">
-                                <div class="col-xl-2 col-md-4 d-none top-buffer-s" id="card-playlistSeguite">
-                                    <div class="card  cardSelezionabile bg-dark p-3 h-100">
-                                        <!-- questa immagine deve venire modificata se ci sono canzoni nella playlist -->
-                                        <img class="card-img    bg-dark" src="images/nota.png" alt="Card image cap">
-                                        <div class="card-body">
-                                            <h5 class="card-title">artista</h5>
-                                            <p class="card-text">utente autore</p>
-                                            <a id="albumLink" class="stretched-link" title="Click to do something"
-                                                href="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- end of post-item -->
-                    </div>
-                    <!-- <div class="col-lg-4 col-md-5"> se volessi mettere una colonna a destra nella pagina</div> -->
-                </div>
-
 
 
 
@@ -354,138 +306,27 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
         function start() {
             loginSiNo();
-            popolaPlaylist();
-            popolaPlaylistSeguite();
+            playlistPubbliche();
         }
 
 
-        // FUNZIONI PLAYLIST PUBBLICHE O PRIVATE
-
-
-        function rendiPrivata(bottonePlaylist) {
-            bottonePlaylist.innerHTML = "Rendi pubblica"
-            bottonePlaylist.setAttribute("onclick", "rendiPubblica(this)")
-
-            let email = localStorage.getItem("loginEmail")
-            let data = {
-                emailUtente: email,
-                nomePlaylist: bottonePlaylist.value,
-            }
-            fetch('http://127.0.0.1:3000/playlist/rendiPrivata/', {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    console.log("la playlist ora è privata")
-                } else {
-                    response.text().then(text =>
-                        alert(text + " la risposta arriva da listaPlaylist.html")
-                    )
-                }
-            })            
-        }
-
-
-        function rendiPubblica (bottonePlaylist) {
-            console.log("sono in rendi pubblica")
-            bottonePlaylist.innerHTML = "Rendi privata"
-            bottonePlaylist.setAttribute("onclick", "rendiPrivata(this)")
-
-            let email = localStorage.getItem("loginEmail")
-            let data = {
-                emailUtente: email,
-                nomePlaylist: bottonePlaylist.value,
-            }
-            fetch('http://127.0.0.1:3000/playlist/rendiPubblica/', {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    console.log("la playlist ora è pubblica")
-                } else {
-                    response.text().then(text =>
-                        alert(text + " la risposta arriva da listaPlaylist.html")
-                    )
-                }
-            })
-        }
-
-
-
-        // FINE FUNZIONI PLAYLIST PUBBLICHE O PRIVATE
-
-
-
-
-        // NUOVA PLAYLIST
-
-        // controlla se esiste già una playlist con un certo nome associata all utente, se non c è la aggiunge
-        function controllaPlaylist() {
-            var nome = document.getElementById('nuovaPlaylist').value;
-            fetch('http://127.0.0.1:3000/playlist/playlistUtente/' + localStorage.getItem("loginEmail") + "/" + nome, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    console.log(searchResults)
-                    if (searchResults == false) nuovaPlaylist(nome);
-                    else alert("la playlist esiste già")
-                })
-        }
-
-        // inserisce nel db una playlist nuova
-        async function nuovaPlaylist(nome) {
-            let email = localStorage.getItem("loginEmail")
-
-            let data = {
-                emailUtente: email,
-                nomePlaylist: nome,
-                pubblica: true
-            }
-            await fetch('http://127.0.0.1:3000/playlist/playlistUtente/', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    console.log("la playlist è stata inserita nel database olè")
-                } else {
-                    response.text().then(text =>
-                        alert(text + " la risposta arriva da listaPlaylist.html")
-                    )
-                }
-            })
-            location.reload() //avendo aggiunto una playlist devo ricaricare la pagina
-        }
-
-
-        //  FINE NUOVA PLAYLIST
-
-
-        async function popolaPlaylist() {
-            let email = localStorage.getItem("loginEmail")
+        // queste due funzioni sono IDENTICHE (copia incolla) alle funzioni in ricerca.html ( ho solo cambiato il nome)
+        async function playlistPubbliche() {
             let playlists;
-            await fetch('http://127.0.0.1:3000/playlist/playlistUtente/' + email, {
+            console.log("ciao")
+
+            await fetch('http://127.0.0.1:3000/playlist/playlistPubbliche', {
                 headers: {
                     "Content-Type": "application/json",
                 },
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
+                    console.log("qua")
+                    console.log(searchResults)
                     playlists = searchResults
                 })
-
-            // ora ho playlists che è la lista di playlist dell utente
+            console.log("pubbliche",playlists)
             var card = document.getElementById("card-playlist");
             var cont = document.getElementById("playlistContainer");
             let img;
@@ -494,25 +335,12 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                 var clone = card.cloneNode(true)
                 clone.id = "numeroPlaylist" + i;
                 clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
-                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist;
+                // sarebbe meglio aggiungere l username al link della playlist e non l email dell utente , ma per come l ho 
+                // fatto l username non è unico mentre l email si
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist + "&email=" + playlists[i].emailUtente;
+                clone.getElementsByClassName('card-text')[0].innerHTML = playlists[i].emailUtente;
 
-                // clone.getElementsByClassName("btn")[1].setAttribute("value", searchResults.id)
-                clone.getElementsByClassName("btn")[0].setAttribute("value", playlists[i].nomePlaylist)
-                console.log(playlists[i])
-                if( ! playlists[i].pubblica) { 
-                    clone.getElementsByClassName("btn")[0].innerHTML = "Rendi pubblica"
-                    clone.getElementsByClassName("btn")[0].setAttribute("onclick", "rendiPubblica(this)")
-                
-                }
-
-                // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
-                //     console.log(i)
-                //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
-                //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
-                // })
-
-
-                img = await immaginePlaylist(playlists[i].nomePlaylist, localStorage.getItem("loginEmail") ) // queste due funzionano ma sono lente
+                img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailUtente) // queste due funzionano ma sono lente
                 if (img) clone.getElementsByClassName("card-img")[0].src = img
 
                 clone.classList.remove('d-none');
@@ -549,49 +377,6 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
             }
             return null;
         }
-
-
-
-        // PLAYLIST SEGUITE
-
-        async function popolaPlaylistSeguite() {
-            let emailUtente = localStorage.getItem("loginEmail")
-            let playlists;
-            console.log("funzione chiamata")
-            await fetch('http://127.0.0.1:3000/playlistSeguiteDallUtente/' + emailUtente, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    playlists = searchResults
-                })
-            // ora ho playlists che è la lista di playlist seguite dell utente
-            console.log(playlists)
-            var card = document.getElementById("card-playlistSeguite");
-            var cont = document.getElementById("playlistSeguiteContainer");
-            let img;
-            cont.append(card)
-            for (var i = 0; i < playlists.length; i++) {
-                let emailAutorePlaylist = playlists[i].emailUtente
-
-                var clone = card.cloneNode(true)
-                clone.id = "numeroPlaylist" + i;
-                clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
-                clone.getElementsByClassName("card-text")[0].innerHTML = emailAutorePlaylist;
-                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist  + "&email=" + emailAutorePlaylist;
-
-                img = await immaginePlaylist(playlists[i].nomePlaylist, emailAutorePlaylist ) // queste due funzionano ma sono lente
-                // img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailAutorePlaylist ) // queste due funzionano ma sono lente
-                if (img) clone.getElementsByClassName("card-img")[0].src = img
-
-                clone.classList.remove('d-none');
-                card.after(clone);
-            }
-        }
-
-
 
 
 

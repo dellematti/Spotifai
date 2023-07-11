@@ -577,7 +577,7 @@
                 clone.getElementsByClassName("card-title")[0].innerHTML = playlists[i].nomePlaylist;
                 // sarebbe meglio aggiungere l username al link della playlist e non l email dell utente , ma per come l ho 
                 // fatto l username non è unico mentre l email si
-                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist + "&email=" + playlists[i].emailUtente ;
+                clone.getElementsByClassName('stretched-link')[0].href = "/playlist?playlist=" + playlists[i].nomePlaylist + "&email=" + playlists[i].emailUtente;
                 clone.getElementsByClassName('card-text')[0].innerHTML = playlists[i].emailUtente;
 
                 img = await immaginePlaylist(playlists[i].nomePlaylist, playlists[i].emailUtente) // queste due funzionano ma sono lente
@@ -591,35 +591,35 @@
 
         // praticamente uguale a immagine playlist della pagina con le playuìlist dell utente, questa ha che l email arriva come
         // paramettro, fare la stessa cosa anche nell altra e renderle una sola funzione
-        async function immaginePlaylist (nomePlaylist, email) {
-                let canzoni;  // sarà le prime 4 canzoni della playlist
-                await fetch('http://127.0.0.1:3000/playlist/' + email + '/' + nomePlaylist + '/' + 4, {
+        async function immaginePlaylist(nomePlaylist, email) {
+            let canzoni;  // sarà le prime 4 canzoni della playlist
+            await fetch('http://127.0.0.1:3000/playlist/' + email + '/' + nomePlaylist + '/' + 4, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((searchResults) => {
+                    canzoni = searchResults
+                })
+
+            if (canzoni.length > 0) { // se la playlist è vuota resituirò null direttamente
+                let img;
+                // fetch all api di spotify, controllare prima il token
+                await fetch("https://api.spotify.com/v1/tracks/" + canzoni[0].idCanzone, { // prima provo prendendo solo la prima canzone
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token"),
                     },
                 })
                     .then((response) => response.json())
                     .then((searchResults) => {
-                        canzoni = searchResults
+                        img = searchResults.album.images[0].url;
                     })
-
-                    if (canzoni.length > 0) { // se la playlist è vuota resituirò null direttamente
-                                let img;
-                                // fetch all api di spotify, controllare prima il token
-                                await fetch("https://api.spotify.com/v1/tracks/" + canzoni[0].idCanzone, { // prima provo prendendo solo la prima canzone
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: "Bearer " + localStorage.getItem("token"),
-                                    },
-                                })
-                                    .then((response) => response.json())
-                                    .then((searchResults) => {
-                                        img = searchResults.album.images[0].url;
-                                    })
-                                    return img
-                        }
-                        return null;        
+                return img
             }
+            return null;
+        }
 
 
 

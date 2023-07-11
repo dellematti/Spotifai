@@ -197,9 +197,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                         <h2 id="titoloPlaylist">Mettere qua il titolo della playlist </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Brani della playlist</a>
+                                <span class="fas fa-list text-primary"></span>
+                                <p class="left-buffer-xs">Brani della playlist</p>
                             </li>
                         </ul>
 
@@ -213,7 +212,6 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                                         <div class="card-body">
                                             <h5 class="card-title">Canzone</h5>
                                             <a class="link text-white px-0 card-text" href="">Artista</a>
-                                            <!-- <div class="card-footer"> -->
 
                                             <div class="row top-buffer-s">
                                                 <div class="col-6">
@@ -228,22 +226,15 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                                                 </div>
 
                                             </div>
-                                            <!-- </div> -->
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-
-
-
                             <!-- per eliminare tutta la playlist -->
                             <!-- IMPORTANTE: deve uscire questo se la playlist è tua, altrimenti  "smetti di seguire" -->
                             <div class="col-lg-7">
                                 <h2 id="elimina" class="top-buffer">Vuoi eliminare questa playlist? </h2>
-                                <!-- <button class="btn btn-primary top-buffer-s" value="" onclick="eliminaPlaylist()">Elimina</button> -->
-
                                 <!-- questo div serve per avere la conferma di eliminare -->
                                 <button id="tastoElimina"
                                     onclick="document.getElementById('id01').style.display='block'"

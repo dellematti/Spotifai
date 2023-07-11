@@ -33,10 +33,6 @@
 
 
 
-
-
-
-
 <body onload="start()">
 
     <!-- navbar in alto -->
@@ -47,7 +43,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <!-- <ul class="navbar-nav"> -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai home</a>
@@ -55,25 +50,15 @@
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
                     <li class="nav-item">
-                        <!-- <form class="d-flex" role="search">
-                            <input class="form-control me-2 bg-dark" id ="ricerca_homepage" type="search" placeholder="Search" aria-label="Search">
-                        </form> -->
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
                                 placeholder="Search" aria-label="Search" />
                         </form>
                     </li>
-                    <!-- devo decidere se togliere completamente la scritta login nel nav, o sostituirla con qualcosa -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn right-buffer left-buffer-s" href="#">Login</a>
-                    </li> -->
                 </ul>
             </div>
         </div>
     </nav>
-
-
-
 
 
 
@@ -84,7 +69,6 @@
         </div>
     </div>
     <!-- END preloader-wrapper -->
-
 
 
 
@@ -112,22 +96,21 @@
 
             <div class="container pt-4 mt-5">
                 <div class="row justify-content-center">
-
-                    <!-- <div class="col-lg-4 col-md-5"> -->
                     <div class="col-lg-17   d-flex justify-content-center">
-
-
-                        <!-- <div class="widget bg-dark p-4 text-center top-buffer" id ="registrazione"> -->
                         <div class="widget  p-4 text-center top-buffer" id="utente">
                             <h2 class="widget-title text-white d-inline-block mt-4" id="nomeUtente">utente</h2>
-                            <p class="mt-4">Da questa pagina è possibile gestire il proprio profilo.</p>
-
+                            <br>
+                            <div class="top-buffer-s">
+                                <p class="mt-4">Da questa pagina è possibile gestire il proprio profilo, cambiando
+                                    username e
+                                    password o cancellando il proprio profilo.</p>
+                            </div>
                             <!-- questa serve per il form del cambio username -->
                             <div class="row top-buffer" id="rowUsername">
                                 <button onclick="cambioUsername()" class="btn btn-primary">Cambia username</button>
                                 <div class="row top-buffer-s">
                                     <form onsubmit="event.preventDefault(); nuovoUsername()" id="usernameForm"
-                                        class="d-none" >
+                                        class="d-none">
                                         <div class="form-group">
                                             <input id="username" type="text"
                                                 class="form-control bg-transparent rounded-0 my-4"
@@ -166,15 +149,10 @@
                                     </form>
                                 </div>
                             </div>
-                            <!-- <div class="row top-buffer">
-                                <a href="./login"  class="btn btn-primary">Cambia password</a>
-                            </div> -->
                             <div class="row top-buffer">
                                 <a href="./login" id="linkRegistrati">Oppure elimina il tuo account cliccando qui</a>
                             </div>
                         </div>
-                        <!-- end of subscription-widget -->
-
                     </div>
                 </div>
             </div>
@@ -208,7 +186,7 @@
             if (document.getElementById("usernameForm").classList.contains("d-none")) {
                 document.getElementById("usernameForm").classList.remove('d-none')
                 // document.getElementById("rowPassword").classList.add('d-none')
-            }else {
+            } else {
                 document.getElementById("usernameForm").classList.add('d-none')
                 // document.getElementById("rowPassword").classList.remove('d-none')
             }
@@ -216,11 +194,11 @@
 
 
         // serve per aprire e chiudere il form di cambio password
-        function cambioPassword() {
+        function cambioPassword() {    // va bene anche se posso avere contemporaneamente i due bottoni nella pagina?
             if (document.getElementById("passwordForm").classList.contains("d-none")) {
                 document.getElementById("passwordForm").classList.remove('d-none')
                 // document.getElementById("rowUsername").classList.add('d-none')
-            }else {
+            } else {
                 document.getElementById("passwordForm").classList.add('d-none')
                 // document.getElementById("rowUsername").classList.remove('d-none')
             }
@@ -228,7 +206,7 @@
 
 
         // cambia l username dell utente se la password è corretta
-        function nuovoUsername () {
+        function nuovoUsername() {
             let email = localStorage.getItem("loginEmail")
             var username = document.getElementById('username')
             var password = document.getElementById('password')
@@ -255,25 +233,20 @@
                 body: JSON.stringify(data)
             }).then(async response => {
                 if (response.ok) {
-                    // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
                     console.log("l utente è stato modificato")
                     window.location.href = "/"
                 } else {
                     response.text().then(text =>
-                        // se la post non ha funzionato, entriamo in questo else e nell variabile text vediamo il perchè
                         alert(text + " la risposta arriva da utente.html")
                     )
-
                 }
-
             })
-
 
         }
 
 
 
-        function nuovaPassword () {
+        function nuovaPassword() {
             let email = localStorage.getItem("loginEmail")
             var password1 = document.getElementById('passwordVecchia')
             var password2 = document.getElementById('passwordNuova1')

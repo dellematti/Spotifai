@@ -177,8 +177,8 @@
                         <h2>Artista </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <a class="ml-1" href="#">Informazioni sull artista</a>
+                                <span class="fas fa-music text-primary"></span>
+                                <p class="left-buffer-xs">Informazioni sull artista</p>
                             </li>
                         </ul>
 
@@ -220,7 +220,6 @@
                                                 <div class="card-footer">
                                                     <small class="text-muted right-buffer-s">The Wall</small>
                                                     <a href="#" class="btn btn-primary right-buffer-s">play</a>
-                                                    <!-- <li class="nav-item dropdown " id=""> -->
                                                     <button class="btn-primary btn dropdown-toggle" href="#"
                                                         role="button" data-bs-toggle="dropdown" aria-expanded="false"
                                                         id="">
@@ -232,7 +231,6 @@
                                                                 onclick="inserisciInPlaylist(this.innerHTML, this.id)">Playlist1</a>
                                                         </li>
                                                     </ul>
-                                                    <!-- </li> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -399,7 +397,7 @@
                         document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
                         document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
                     } else {
-                        // console.log("L artista non era tra i preferiti")
+                        console.log("L artista non era tra i preferiti")
                     }
                 })
         }
@@ -480,18 +478,13 @@
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
-                    // console.log(searchResults)
                     document.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
                     document.getElementsByClassName("card-text")[0].innerHTML = searchResults.genres[0];
                     document.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
                     document.getElementById("bottonePreferiti").setAttribute("name", artistaID); //metto l id nel bottone  
-                    
                     // se non sono loggato non mi serve il bottone dei preferiti
-                    // console.log(loggato)
                     if (loggato == false)
                         document.getElementById("bottonePreferiti").remove(); 
-                        // document.getElementById("bottonePreferiti").classList.add("d-none"); 
-                    
                     listaCanzoniArtista(artistaID)  //devo passare l id dell album per avere la lista delle canzoni
                 })
         }
@@ -500,7 +493,6 @@
 
         // dato l id dell artista genero le card contenenti le info delle traccie, sono le card laterali
         function listaCanzoniArtista(artistaID) {
-            // console.log(artistaID)
             fetch("https://api.spotify.com/v1/artists/" + artistaID + "/top-tracks?market=Us", {
                 headers: {
                     "Content-Type": "application/json",
@@ -509,8 +501,6 @@
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
-                    console.log(searchResults)
-                    // e ora da questi dati devo duplicare le card delle canzoni e farne una per canzone
                     var card = document.getElementById("card-canzone");
                     var cont = document.getElementById("canzoneContainer");
                     cont.innerHTML = "";
@@ -561,15 +551,12 @@
                         clone.getElementsByClassName('text-muted')[0].innerHTML = searchResults.items[i].album_group;
                         clone.getElementsByClassName('stretched-link')[0].href = "/album?album=" + searchResults.items[i].id;
                         clone.classList.remove('d-none');
-                        // card.after(clone);
                         card.before(clone);
                     }
                 }
                 )
 
         }
-
-
 
 
 

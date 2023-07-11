@@ -47,7 +47,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <!-- <ul class="navbar-nav"> -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai</a>
@@ -55,13 +54,9 @@
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
                     <li class="nav-item">
-                        <!-- <form class="d-flex" role="search">
-                            <input class="form-control me-2 bg-dark" id ="ricerca_homepage" type="search" placeholder="Search" aria-label="Search">
-                        </form> -->
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
                                 placeholder="Search" aria-label="Search"  />
-                            <!-- <input type="submit" id="searchsubmit" value="submit" /> -->
                         </form>
                     </li>
                 </ul>
@@ -110,9 +105,11 @@
                         
                         <div class="widget  p-4 text-center top-buffer" id ="registrazione">
                             <h2 class="widget-title text-white d-inline-block mt-4">Login</h2>
-                            <p class="mt-4">Effettua il login per poter vedere i tuoi artisti, album e playlist preferite.
-                                <br>Inserire indirizzo email e password
-                            </p>
+                            <div class="top-buffer-s">
+                                <p class="mt-4">Effettua il login per poter vedere i tuoi artisti, album e playlist preferite.
+                                    <br>Inserire indirizzo email e password
+                                </p>
+                            </div>
                             <!-- RIPROVARE A FARE IL LOGIN SENZA LA FUNZIONE, MA SOLO CON IL POST SOTTO COMMENTATO -->
                             <!-- <form action="http://127.0.0.1:3000/users/login?apikey=123456" method = "POST"> -->
                             <!-- <form action="/users/login?apikey=123456"  method = "POST"> -->
@@ -168,7 +165,6 @@
             }
             console.log("provo il login" + data)
 
-            // andiamo su /users/login dove in ascolto cè il backend che farà i vari controlli
             fetch("http://127.0.0.1:3000/users/login?apikey=123456", {
                 method: "POST",
                 headers: {
@@ -177,16 +173,13 @@
                 body: JSON.stringify(data)
             }).then(async response => {
                 if (response.ok) {
-                    // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
                     console.log("ti sei loggato")
-                    console.log(response)
                     localStorage.setItem("login", "true")
                     localStorage.setItem("loginEmail", email.value)
                     window.location.href = "/"
                     // se mi sono loggato allora metto a true il valore di login nel localstorage, poi lo controllo nelle altre pagine
                 } else {
                     response.text().then(text =>
-                        // se la post non ha funzionato, entriamo in questo else e nell variabile text vediamo il perchè
                         alert(text + " login non ha funzionato")
                     )
 

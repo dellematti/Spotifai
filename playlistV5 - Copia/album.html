@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
 <!-- il front end parla direttamente con le api di sopstify,e non solo con il mio backend -->
 <html>
 
 
-<!-- PRIMA DI REGISTRARMI DOVRO' CONTROLLARE CHE L EMAIL (O IL NOME) NON SIA PRESENTE NEL DATABASE -->
-
-
 <head>
-
     <meta charset="utf-8">
     <title>Spotifai</title>
 
@@ -25,6 +27,7 @@
     <link rel="stylesheet" href="plugins/fontawesome/css/all.css">
 
     <!-- Main Stylesheet -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -39,7 +42,13 @@
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
     <link rel="icon" href="images/favicon.png" type="image/x-icon">
 
+
+
+
 </head>
+
+
+
 
 
 
@@ -69,6 +78,7 @@
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
                                 placeholder="Search" aria-label="Search" />
+                            <!-- <input type="submit" id="searchsubmit" value="submit" /> -->
                         </form>
                     </li>
                     <!-- DOVRO' SOSTITUIRE IL DIV SOPRA CON QUELLO SOTTO E VICERVERSA IN BASE AL VALORE DI LOGIN -->
@@ -83,13 +93,14 @@
                         </a>
                         <ul class="dropdown-menu  ">
                             <li><a class="dropdown-item " onclick="logout()" href="/">Logout</a></li>
-                            <li><a class="dropdown-item "  href="/utente">Utente</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+
 
 
 
@@ -101,24 +112,29 @@
     </div>
     <!-- END preloader-wrapper -->
 
-
-
     <!-- START main-wrapper -->
     <section class="d-flex">
 
         <!-- start of sidenav -->
         <aside>
             <div class="sidenav position-sticky d-flex flex-column justify-content-between">
+                <!-- <a class="navbar-brand" href="index.html" class="logo">
+                    <img src="images/lsogo.png" alt="">
+                </a> -->
+                <!-- end of navbar-brand -->
 
                 <div class="navbar navbar-dark my-4 p-0 font-primary">
-                    <ul class="navbar-nav w-100 ">
+                    <ul class="navbar-nav w-100">
+                        <!-- <li class="nav-item "> -->
                         <li class="nav-item top-buffer-xl">
-                            <a class="nav-link text-white px-0 pt-0" id="linkArtisti" href="./listaArtistiPreferiti">Artisti</a>
+                            <a class="nav-link text-white px-0 pt-0"  id="linkArtisti" href="listaArtistiPreferiti">Artisti</a>
                         </li>
+                        <!-- <li class="nav-item ">
+                            <a class="nav-link text-white px-0" href="about.html">Album</a>
+                        </li> -->
                         <li class="nav-item ">
-                            <a class="nav-link text-white px-0" id="linkPlaylist" href="./listaPlaylist">Playlist</a>
+                            <a class="nav-link text-white px-0"  id="linkPlaylist" href="listaPlaylist">Playlist</a>
                         </li>
-                        <br>
                     </ul>
                 </div>
                 <!-- end of navbar -->
@@ -148,6 +164,11 @@
 
 
 
+
+
+
+
+
         <div class="main-content">
             <!-- start of mobile-nav -->
             <header class="mobile-nav pt-4">
@@ -168,103 +189,84 @@
 
             <div class="container pt-4 mt-5">
                 <div class="row justify-content-between">
+                    <!-- <div class="col-lg-7"> --> <!--alcune cose non saranno a tutto schermo orizzontalmente-->
                     <div class="col-lg-12">
-                        <h2>Nuove Uscite </h2>
+
+                        <h2>Album </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
                                 <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Album e singoli più recenti</a>
+                                <a class="ml-1" href="#">Informazioni sull album</a>
                             </li>
                         </ul>
-                        <!-- QUA CI SONO LE CARD VARIE DELLE TENDENZE -->
+
+                        <!-- card album -->
                         <div class="row top-buffer-s right-buffer">
-                            <div class="row  right-buffer" id="tendenzeContainerUS">
-                                <div class="col-xl-2 col-md-4 d-none bottom-buffer" id="card-tendenzeUS">
-                                    <div class="card top-buffer-s  cardSelezionabile bg-dark p-3 h-100">
-                                        <img class="card-img    bg-dark" src="images/ntoa.png" alt="Card image cap">
-                                        <div class="card-body">
-                                            <h5 class="card-title">album</h5>
-                                            <a class="link text-white px-0 card-text second-link" href="">Artista</a>
-                                            <a id="albumLink" class="stretched-link" title="Click to do something"
-                                                href="">
-                                            </a>
-                                        </div>
-                                        <div class="card-footer">
-                                            <small class="text-muted">Album</small>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="row top-buffer-s right-buffer" id="albumContainer">
+                                    <div class="col-xl-12 col-md-12" id="card-album">
+                                        <div class="card bg-dark p-3 h-100">
+                                            <img class="card-img    bg-dark" src=""
+                                                alt="Card image cap">
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+                                                <!-- <p class="card-text">Pink Floyd</p> -->
+                                                <a class="link text-white px-0 card-text" href="">Album</a>
+                                            </div>
+                                            <div class="card-footer">
+                                                <small class="text-muted"></small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
 
-                        <!-- QUA CI SONO LE CARD VARIE DELLE USCITE ITA -->
-                        <ul class="post-meta mt-3 row ">
-                            <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary "></span><!--cercare altro, oltre a clock-->
-                                <a class="ml-1" href="#">Nuove uscite Italiane</a>
-                            </li>
-                        </ul>
-                        <div class="row top-buffer-s right-buffer">
-                            <div class="row top-buffer-s right-buffer" id="tendenzeContainerIT">
-                                <div class="col-xl-2 col-md-4 d-none bottom-buffer" id="card-tendenzeIT">
-                                    <div class="card cardSelezionabile bg-dark p-3 h-100">
-                                        <img class="card-img    bg-dark" src="images/faces.jpg" alt="Card image cap">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Canzone</h5>
-                                            <a id="albumLink" class="stretched-link" title="Click to do something"
-                                                href="" action="risultati" method="GET">
-                                            </a>
-                                            <a class="link text-white px-0 card-text second-link" href="">Artista</a>
-                                        </div>
-                                        <div class="card-footer">
-                                            <small class="text-muted">Album</small>
+                            <div class="col-xl-6 col-md-8 " id="listaCanzoni">
+                                <div class="overflow-auto p-3 scrollabile">
+                                    <div class="row  right-buffer" id="canzoneContainer">
+                                        <div class="col-xl-12 col-md-12 d-none" id="card-canzone">
+                                            <div class="card cardSelezionabile top-buffer-s bg-dark p-3 ">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Another brick in the wall</h5>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <small class="text-muted right-buffer-s">The Wall</small>
+                                                    <a href="#" class="btn btn-primary right-buffer-s">play</a>
+                                                    <!-- <li class="nav-item dropdown " id=""> -->
+                                                    <button class="btn-primary btn dropdown-toggle" href="#"
+                                                        role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                                        id="">
+                                                        aggiungi a playlist
+                                                    </button>
+                                                    <ul class="dropdown-menu  ">
+                                                        <li><a class="dropdown-item d-none " value="ok"
+                                                                id="sceltaPlaylist"
+                                                                onclick="inserisciInPlaylist(this.innerHTML, this.id)">Playlist1</a>
+                                                        </li>
+                                                    </ul>
+                                                    <!-- </li> -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+
+
                         </div>
 
-
-
-                        <!-- questa parte compare solo se ho fatto il login, chiamo onload una funzione che controlla anche
-                            quello oltre a mettere l artista giusto in caso sia loggato ( il primo artista della lista/uno a caso) -->
-                        <div class="row top-buffer-s d-none" id ="concertiArtista">
-                            <div class="col-lg-7">
-                                <h2>Artisti consigliati</h2>
-                                <a href="" id="artista"> <!-- cambio l href dalla funzione con l id dell artista-->
-                                    <img class="card-img-top rounded-0 top-buffer-s" src="" id="imgArtista" alt="">
-                                </a>
-                                <h2 class="top-buffer-s" id ="nomeArtista">
-                                    Nome dell artista
-                                </h2>
-                                <ul class="post-meta mt-3">
-                                    <li class="d-inline-block mr-3">
-                                        <span class="fas fa-clock text-primary"></span>
-                                        <a class="ml-1" href="#">perché ti piace:</a>
-                                    </li>
-                                    <li class="d-inline-block">
-                                        <span class="fas fa-list-alt text-primary"></span>
-                                        <a class="ml-1" href="#" id="mioArtista">Ciao</a>
-                                    </li>
-                                </ul>
-                                <p class="card-text my-4">Aggiungi artisti ai tuoi preferiti per avere più
-                                    suggerimenti su altri artisti che potrebbero piacerti!</p>
-                            </div>
-                        </div>
-
-
-                        <h2 class="top-buffer-s" id ="nomeArtista">
-                            Guarda le playlist pubbliche presenti sulla piattaforma!
-                        </h2>
-                        <a href="./playlistPubbliche" class=" btn btn-primary top-buffer-s">playlist pubbliche</a>
-                        <!-- end of post-item -->
                     </div>
-                    <!-- <div class="col-lg-4 col-md-5"> se volessi mettere una colonna a destra nella pagina</div> -->
                 </div>
             </div>
+
+
 
 
             <!-- start of footer -->
@@ -319,66 +321,35 @@
     <!-- All JS Files -->
     <script src="plugins/jQuery/jquery.min.js"></script>
     <script src="plugins/bootstrap/bootstrap.min.js"></script>
-
-    <!-- dropdown -->
+    
+    <!-- dropdown        SENZA QUESTO SRC IL DROPWDOWN NON FUNZIONA !!!! -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
         crossorigin="anonymous"></script>
-
 
     <!-- Main Script -->
     <script src="js/script.js"></script>
     <script>
 
-        function start() {
-            loginSiNo();
-            nuoveUscite("US");
-            nuoveUscite("IT");
-            artistiConsigliati();
+        async function start() {
+            loggato = loginSiNo();
+            if(loggato == true) {
+                await elencoPlaylistDropdown();
+            }    
+            album();
         }
 
 
-        // guardo gli artisti preferiti dell utente e ne cerco uno che possa piacergli
-        async function artistiConsigliati () {
-            let loggato = localStorage.getItem("login")
-            if (loggato == "true") {
-                document.getElementById("concertiArtista").classList.remove('d-none');
-                // ora prendo un artista preferito a caso tra quelli dell utente
-                // se non ce nè nessuno scrivo di aggiungerli
+        function album() {
+            let tmp = new URLSearchParams(location.search); //prendo il nome dell album dall URL, sarebbe meglio l ID
+            let albumID = tmp.get("album")
 
-                let email = localStorage.getItem("loginEmail")
-                let idArtista;
-                // prendo tutti gli artisti preferiti dell utente e ne scelgo uno a caso
-                await fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + email, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                })
-                .then((response) => response.json())
-                .then((artisti) => {
-                    let random = Math.floor(Math.random() * artisti.length)  // numero casuale tra 0 e il numero di preferiti
-                    idArtista = artisti[random].idArtista
-                })
-                
-                // ora posso caricare gli artisti consigliati
-                let consigliati
-                fetch("https://api.spotify.com/v1/artists/" + idArtista + "/related-artists", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-                })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    let random = Math.floor(Math.random() * searchResults.artists.length)  // numero casuale tra 0 e in teoria sempre 20
-                    document.getElementById("artista").href = "/artista?artista=" + searchResults.artists[random].id;
-                    document.getElementById("imgArtista").src = searchResults.artists[random].images[0].url;
-                    document.getElementById("nomeArtista").innerHTML = searchResults.artists[random].name;
-                })
+            console.log("ciao");
+            console.log(albumID);
 
-                // chiedo le informazioni per avere il nome del mio artista motivo del suggerimento
-                // RICONTROLLARE il token 
-                fetch("https://api.spotify.com/v1/artists/" + idArtista, {
+            // prima di una fetch a spotify dovrei sempre controllare che il token sia valido
+
+            fetch("https://api.spotify.com/v1/albums/" + albumID, {  //es : "http: .... ?type=album&q=The Wall"
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + localStorage.getItem("token"),
@@ -386,17 +357,21 @@
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
-                    document.getElementById("mioArtista").innerHTML = searchResults.name;
-                    document.getElementById("mioArtista").href = "/artista?artista=" + searchResults.id;
-                })
-
-            }
-
+                    var card = document.getElementById("card-album");
+                    card.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
+                    card.getElementsByClassName("card-text")[0].innerHTML = searchResults.artists[0].name;
+                    card.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
+                    card.getElementsByClassName('text-muted')[0].innerHTML = searchResults.release_date;
+                    card.getElementsByClassName('link')[0].href = "/artista?artista=" + searchResults.artists[0].id;
+                    listaCanzoni(albumID)  //devo passare l id dell album per avere la lista delle canzoni
+                }
+                )
         }
 
 
-        function nuoveUscite(country) {
-            fetch('https://api.spotify.com/v1/browse/new-releases?country=' + country, {
+        // dato l id dell album genero le card contenenti le info delle traccie
+        function listaCanzoni(albumID) {
+            fetch("https://api.spotify.com/v1/albums/" + albumID + "/tracks?limit=50", {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + localStorage.getItem("token"),
@@ -404,27 +379,23 @@
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
-                    if (validitàToken(searchResults)) {
-                        var card = document.getElementById("card-tendenze" + country);
-                        var cont = document.getElementById("tendenzeContainer" + country);
-                        cont.innerHTML = "";
-                        cont.append(card)
-                        for (var i = 5; i >= 0; i--) {
-                            var clone = card.cloneNode(true)
-                            clone.id = "numeroTendenza" + country + i;
-                            clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.albums.items[i].name;
-                            clone.getElementsByClassName('link')[0].innerHTML = searchResults.albums.items[i].artists[0].name;
-                            clone.getElementsByClassName('second-link')[0].href = "/artista?artista=" + searchResults.albums.items[i].artists[0].id;
-                            clone.getElementsByClassName("card-img")[0].src = searchResults.albums.items[i].images[0].url;
-                            clone.getElementsByClassName('text-muted')[0].innerHTML = searchResults.albums.items[i].release_date;
-                            // metto il ref ad /album con allegato l id
-                            clone.getElementsByClassName('stretched-link')[0].href = "/album?album=" + searchResults.albums.items[i].id;
-                            clone.classList.remove('d-none');
-                            card.after(clone);
+                    console.log(searchResults.items)
+                    // e ora da questi dati devo duplicare le card delle canzoni e farne una per canzone
+                    var card = document.getElementById("card-canzone");
+                    var cont = document.getElementById("canzoneContainer");
+                    cont.innerHTML = "";
+                    cont.append(card)
+                    for (var i = searchResults.items.length - 1; i >= 0; i--) {
+                        console.log("aono nel for")
+                        var clone = card.cloneNode(true)
+                        clone.id = "numeroCanzone" + i;
+                        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.items[i].track_number + " " + searchResults.items[i].name;
+                        clone.getElementsByClassName('text-muted')[0].innerHTML = msConversioneMin(searchResults.items[i].duration_ms);
+                        for (var j = 1; j < clone.getElementsByClassName('dropdown-item').length; j++) {
+                            clone.getElementsByClassName('dropdown-item')[j].setAttribute("id", searchResults.items[i].id);
                         }
-                    } else {
-                        // console.log("validità token ci ha dato false")
-                        nuoveUscite(country)    //ora che ho ripreso il token richiamo la funzione
+                        clone.classList.remove('d-none');
+                        card.after(clone);
                     }
                 }
                 )
@@ -432,7 +403,10 @@
 
 
 
+
+
     </script>
+
 
 </body>
 

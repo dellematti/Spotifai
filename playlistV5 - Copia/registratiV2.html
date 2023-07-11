@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Spotifai</title>
+
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="gaxlaxy" />
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome/css/all.css">
+
+    <!-- Main Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/cssMio.css" rel="stylesheet">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+
+</head>
+
+
+
+
+
+
+
+
+<body>
+
+    <!-- navbar in alto -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top ">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <!-- <ul class="navbar-nav"> -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Spotifai</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                    <li class="nav-item">
+                        <!-- <form class="d-flex" role="search">
+                            <input class="form-control me-2 bg-dark" id ="ricerca_homepage" type="search" placeholder="Search" aria-label="Search">
+                        </form> -->
+                        <form class="d-flex" role="search" action="risultati" method="GET">
+                            <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
+                                placeholder="Search" aria-label="Search"  />
+                        </form>
+                    </li>
+                    <!-- devo decidere se togliere completamente la scritta login nel nav, o sostituirla con qualcosa -->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn right-buffer left-buffer-s" href="#">Login</a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+
+    <!-- START preloader-wrapper -->
+    <div class="preloader-wrapper">
+        <div class="preloader-inner">
+            <div class="spinner-border text-red"></div>
+        </div>
+    </div>
+    <!-- END preloader-wrapper -->
+
+
+
+    
+    <!-- START main-wrapper -->
+    <!-- <section class="d-flex"> -->
+        <main id = login>
+
+            
+            
+            <div class="main-content">
+            <!-- start of mobile-nav -->
+            <header class="mobile-nav pt-4">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-6 text-right">
+                            <button class="nav-toggle bg-transparent border text-white">
+                                <span class="fas fa-bars"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="nav-toggle-overlay"></div>
+            <!-- end of mobile-nav -->
+            
+            <div class="container pt-4 mt-5">
+                <div class="row justify-content-center">
+                    
+                    <!-- <div class="col-lg-4 col-md-5"> -->
+                    <div class="col-lg-17   d-flex justify-content-center">
+                        
+
+                        <!-- <div class="widget bg-dark p-4 text-center top-buffer" id ="registrazione"> -->
+                        <div class="widget  p-4 text-center top-buffer" id ="registrazione">
+                            <h2 class="widget-title text-white d-inline-block mt-4">Registrati</h2>
+                            <p class="mt-4">Qua scrivere qualcosa sulla registrazione.</p>
+                            <!-- <form action="#">
+                                <div class="form-group">
+                                    <input id="email" type="email" class="form-control bg-transparent rounded-0 my-4" placeholder="Email" aria-label="Email"
+                                    value="ciao@email.com" aria-describedby="basic-addon1">
+                                    <input id="password1" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="password2" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="username" type="text" class="form-control bg-transparent rounded-0 my-4" placeholder="Username" aria-label="Username"
+                                    value="mattia" aria-describedby="basic-addon1">                                    
+                                    <button onclick="registrati()" class="btn btn-primary">Registrati</button>
+                                </div>
+                                <a href="./login" id = "linkRegistrati">Oppure fai il login cliccando qui</a>
+                            </form> -->
+                            <form onsubmit="event.preventDefault(); registrati()">  <!-- cosi funziona ok-->
+                                <div class="form-group">
+                                    <input id="email" type="email" class="form-control bg-transparent rounded-0 my-4" placeholder="Email" aria-label="Email"
+                                    value="ciao@email.com" aria-describedby="basic-addon1">
+                                    <input id="password1" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="password2" type="password" class="form-control bg-transparent rounded-0 my-4" placeholder="Password" aria-label="Username"
+                                    aria-describedby="basic-addon1" value="1234567">
+                                    <input id="username" type="text" class="form-control bg-transparent rounded-0 my-4" placeholder="Username" aria-label="Username"
+                                    value="mattia" aria-describedby="basic-addon1">  
+                                    <button type="submit" class="btn btn-primary">registrati</button>
+                                </div>
+                                <a href="./login" id = "linkRegistrati">Oppure fai il login cliccando qui</a>
+                            </form>
+
+
+                        </div>
+                        <!-- end of subscription-widget -->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    <!-- </section> -->
+    </main>
+    <!-- END main-wrapper -->
+
+    <!-- All JS Files -->
+    <script src="plugins/jQuery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/bootstrap.min.js"></script>
+    
+    <!-- Main Script -->
+    <script src="js/script.js"></script>
+
+
+    <!-- Script della registrazione ,     volendo si può spostarlo in un file js separato -->
+    <script>
+
+
+        function registrati() {
+            var email = document.getElementById('email')
+            var password1 = document.getElementById('password1')
+            var password2 = document.getElementById('password2')
+            var username = document.getElementById('username')
+
+            if (password1.value != password2.value || password1.value.length < 7) {
+                password1.classList.add('border')
+                password1.classList.add('border-danger')
+                password2.classList.add('border')
+                password2.classList.add('border-danger')
+            } else {
+                password1.classList.remove('border')
+                password1.classList.remove('border-danger')
+                password2.classList.remove('border')
+                password2.classList.remove('border-danger')
+            }
+
+            var data = {
+                username: username.value,
+                email: email.value,
+                password: password1.value,
+
+            }
+            console.log(data)
+
+            // andiamo su /users 
+            fetch("http://127.0.0.1:3000/users/registrati?apikey=123456", {
+            // fetch("http://127.0.0.1:3100/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(async response => {
+                if (response.ok) {
+                    // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
+                    window.location.href = "/"
+                    console.log("l utente è stato inserito nel database olè")
+                } else {
+                    response.text().then(text =>
+                        // se la post non ha funzionato, entriamo in questo else e nell variabile text vediamo il perchè
+                        alert(text + " la risposta arriva da registrati.html")
+                    )
+
+                }
+
+            })
+
+
+
+
+        }
+
+
+    </script>
+
+
+
+</body>
+
+</html>

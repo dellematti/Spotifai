@@ -17,13 +17,13 @@ VERSION:	v1.0
 -------------------------------------------------------------------*/
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500&family=Montserrat:wght@400;500&display=swap");
 body {
-  color: #B0B0B0;
-  /* background-color: #1A191E; */
-  /* background-color: #3d1cc5; */
-  font-family: "Montserrat", sans-serif;
-  font-size: 16px;
   line-height: 1.65;
   overflow-y: hidden;
+  font-family: "Montserrat", sans-serif;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14px;
+  /* font-size: 16px; */
 }
 
 body.loaded {
@@ -89,216 +89,25 @@ body.loaded {
   background-color: #E4112F;
 }
 
-.search-form {
-  margin-bottom: 35px;
-}
-.search-form input {
-  height: 45px;
-  border-color: #333139;
-}
-.search-form input:focus {
-  border-color: #444;
-}
-.search-form .btn {
-  border: 1px solid #333139;
-}
-.search-form .btn:hover {
-  background-color: #E4112F;
-  border-color: #E4112F;
-}
-
-.bullet-list-item {
-  position: relative;
-  padding-left: 20px;
-}
-
-.bullet-list-item::after {
-  position: absolute;
-  content: "";
-  height: 10px;
-  width: 10px;
-  background-color: #E4112F;
-  left: 0;
-  top: 9px;
-  border-radius: 50px;
-}
 
 /*=== UTILITIES CLASSES ===*/
 .font-primary {
   font-family: "Barlow Condensed", sans-serif;
 }
 
-.font-secondary {
-  font-family: "Montserrat", sans-serif;
-}
-
 .shadow {
   box-shadow: 0px 0px 20px rgba(34, 34, 34, 0.04) !important;
 }
 
-.add-letter-space {
-  letter-spacing: 2px;
-}
-
-.opacity-0, .opacity-0-onHover,
-.opacity-25, .opacity-25-onHover,
-.opacity-50, .opacity-50-onHover,
-.opacity-75, .opacity-75-onHover,
-.opacity-1, .opacity-1-onHover {
-  transition: all 0.3s;
-}
-
-.opacity-0, .opacity-0-onHover:hover {
-  opacity: 0;
-}
-
-.opacity-25, .opacity-25-onHover:hover {
-  opacity: 0.25;
-}
-
-.opacity-50, .opacity-50-onHover:hover {
-  opacity: 0.5;
-}
-
-.opacity-75, .opacity-75-onHover:hover {
-  opacity: 0.75;
-}
-
-.opacity-1, .opacity-1-onHover:hover {
-  opacity: 1;
-}
-
-.z-index-1 {
-  z-index: 1;
-}
-
-.z-index-100 {
-  z-index: 100;
-}
-
-.z-index-200 {
-  z-index: 200;
-}
-
-.z-index-bottom {
-  z-index: -5;
-}
-
-.z-index-top {
-  z-index: 9900;
-}
-
-.text-gray {
-  color: #B0B0B0;
-}
-
-.bg-gray {
-  background-color: #B0B0B0;
-}
 
 .text-primary, .text-primary-onHover:hover {
   color: #E4112F !important;
-}
-
-.bg-primary {
-  background-color: #E4112F !important;
-}
-
-.text-dark {
-  color: #1D1C21 !important;
 }
 
 .bg-dark {
   background-color: #1D1C21 !important;
 }
 
-.bg-black {
-  background-color: #000000;
-}
-
-.text-black {
-  color: #000000;
-}
-
-.text-black-100 {
-  color: #111111;
-}
-
-.bg-black-100 {
-  background-color: #111111;
-}
-
-.bg-black-200 {
-  background-color: #222222;
-}
-
-.text-black-200 {
-  color: #222222;
-}
-
-.bg-black-300 {
-  background-color: #333333;
-}
-
-.text-black-300 {
-  color: #333333;
-}
-
-.text-black-400 {
-  color: #444444;
-}
-
-.bg-black-400 {
-  background-color: #444444;
-}
-
-.bg-black-500 {
-  background-color: #555555;
-}
-
-.text-black-500 {
-  color: #555555;
-}
-
-.text-black-600 {
-  color: #666666;
-}
-
-.bg-black-600 {
-  background-color: #666666;
-}
-
-.bg-black-700 {
-  background-color: #777777;
-}
-
-.text-black-700 {
-  color: #777777;
-}
-
-.text-black-700-darken {
-  color: #737373;
-}
-
-.bg-black-700-darken {
-  background-color: #737373;
-}
-
-.text-black-800 {
-  color: #888888;
-}
-
-.bg-black-800 {
-  background-color: #888888;
-}
-
-.bg-black-900 {
-  background-color: #999999;
-}
-
-.text-black-900 {
-  color: #999999;
-}
 
 h1, .h1, h2, .h2, h3, .h3, h4 {
   font-family: "Barlow Condensed", sans-serif;
@@ -380,9 +189,6 @@ ul, li {
   margin: 0;
 }
 
-.table-bordeprimary td, .table-bordeprimary th {
-  border-color: #333139 !important;
-}
 
 /*------------------------------------------------------------------
  # preloader style
@@ -554,20 +360,11 @@ ul, li {
   visibility: visible;
 }
 
-.drop-menu {
-  padding-left: 10px;
-  border-left: 1px solid #555;
-}
-.drop-menu a {
-  color: #ffffff;
-}
-.drop-menu a.active, .drop-menu a:hover {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
 
 /*------------------------------------------------------------------
  # blog post style
 -------------------------------------------------------------------*/
+/* qua cè il css dei vari link che devo far diventare scritte normali di testo            !!!!!!!!!     */
 .post-item .card-img-top {
   transition: 0.3s;
 }
@@ -585,27 +382,6 @@ ul, li {
   text-decoration: underline;
 }
 
-.breadcrumb-wrap a {
-  color: #B0B0B0;
-}
-.breadcrumb-wrap a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-.categores-links a {
-  font-size: 13px;
-  color: #B0B0B0;
-  border-color: #E4112F !important;
-  padding: 4px 7px;
-  margin-right: 6px;
-  margin-top: 8px;
-}
-.categores-links a:hover {
-  color: #ffffff;
-  background-color: #E4112F;
-}
-
 @media (max-width: 991px) {
   .border-lg-0 {
     border: 0 !important;
@@ -621,38 +397,8 @@ ul, li {
   }
 }
 
-.blockquote-text {
-  font-size: 24px;
-  position: relative;
-}
-.blockquote-text::before, .blockquote-text::after {
-  position: absolute;
-  color: #E4112F;
-  font-size: 61px;
-  line-height: 0;
-  font-family: "Barlow Condensed", sans-serif;
-}
-.blockquote-text::before {
-  content: "“";
-  top: 30px;
-  left: -35px;
-}
-.blockquote-text::after {
-  content: "”";
-  bottom: 0;
-  right: -35px;
-}
-@media (max-width: 575px) {
-  .blockquote-text {
-    font-size: 15px;
-  }
-}
 
-@media (max-width: 575px) {
-  .blockquote-footer {
-    font-size: 15px;
-  }
-}
+
 /*------------------------------------------------------------------
  # widget style
 -------------------------------------------------------------------*/
@@ -674,49 +420,7 @@ ul, li {
   padding-bottom: 10px;
 }
 
-.author-thumb-sm {
-  height: auto;
-  max-width: 230px;
-  width: 100%;
-}
 
-/*------------------------------------------------------------------
- # contact-form style
--------------------------------------------------------------------*/
-.contact-form {
-  padding: 60px;
-}
-.contact-form label {
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 15px;
-}
-.contact-form .form-control {
-  background-color: transparent;
-  border: 0;
-  color: #aaa;
-  border-color: #333139 !important;
-  padding-bottom: 20px;
-}
-.contact-form .form-control:focus {
-  border-color: #888888 !important;
-}
-.contact-form select {
-  padding-bottom: 16px;
-  color: #aaa;
-  padding-right: 15px;
-  background-color: transparent;
-  border: 0;
-  border-bottom: 1px solid #333139;
-}
-.contact-form select option {
-  background-color: #1D1C21;
-  color: #ffffff;
-}
-.contact-form textarea {
-  resize: none;
-  height: 100px;
-}
 
 /*------------------------------------------------------------------
  # footer style

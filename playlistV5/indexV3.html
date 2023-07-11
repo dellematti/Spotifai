@@ -83,7 +83,7 @@
                         </a>
                         <ul class="dropdown-menu  ">
                             <li><a class="dropdown-item " onclick="logout()" href="/">Logout</a></li>
-                            <li><a class="dropdown-item "  href="/utente">Utente</a></li>
+                            <li><a class="dropdown-item " href="/utente">Utente</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -113,7 +113,8 @@
                 <div class="navbar navbar-dark my-4 p-0 font-primary">
                     <ul class="navbar-nav w-100 ">
                         <li class="nav-item top-buffer-xl">
-                            <a class="nav-link text-white px-0 pt-0" id="linkArtisti" href="./listaArtistiPreferiti">Artisti</a>
+                            <a class="nav-link text-white px-0 pt-0" id="linkArtisti"
+                                href="./listaArtistiPreferiti">Artisti</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link text-white px-0" id="linkPlaylist" href="./listaPlaylist">Playlist</a>
@@ -172,9 +173,8 @@
                         <h2>Nuove Uscite </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Album e singoli più recenti</a>
+                                <span class="fas fa-clock text-primary"> </span>
+                                <p class="left-buffer-xs">Album e singoli più recenti</p>
                             </li>
                         </ul>
                         <!-- QUA CI SONO LE CARD VARIE DELLE TENDENZE -->
@@ -203,8 +203,8 @@
                         <!-- QUA CI SONO LE CARD VARIE DELLE USCITE ITA -->
                         <ul class="post-meta mt-3 row ">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary "></span><!--cercare altro, oltre a clock-->
-                                <a class="ml-1" href="#">Nuove uscite Italiane</a>
+                                <span class="fas fa-clock text-primary"> </span>
+                                <p class="left-buffer-xs">Nuove uscite Italiane</p>
                             </li>
                         </ul>
                         <div class="row top-buffer-s right-buffer">
@@ -231,32 +231,34 @@
 
                         <!-- questa parte compare solo se ho fatto il login, chiamo onload una funzione che controlla anche
                             quello oltre a mettere l artista giusto in caso sia loggato ( il primo artista della lista/uno a caso) -->
-                        <div class="row top-buffer-s d-none" id ="concertiArtista">
+                        <div class="row top-buffer-s d-none" id="concertiArtista">
                             <div class="col-lg-7">
                                 <h2>Artisti consigliati</h2>
                                 <a href="" id="artista"> <!-- cambio l href dalla funzione con l id dell artista-->
                                     <img class="card-img-top rounded-0 top-buffer-s" src="" id="imgArtista" alt="">
                                 </a>
-                                <h2 class="top-buffer-s" id ="nomeArtista">
+                                <h2 class="top-buffer-s" id="nomeArtista">
                                     Nome dell artista
                                 </h2>
                                 <ul class="post-meta mt-3">
                                     <li class="d-inline-block mr-3">
-                                        <span class="fas fa-clock text-primary"></span>
-                                        <a class="ml-1" href="#">perché ti piace:</a>
+                                        <!-- <span class="fas fa-clock text-primary"></span> -->
+                                        <p>Perché ti piace:</p>
                                     </li>
                                     <li class="d-inline-block">
-                                        <span class="fas fa-list-alt text-primary"></span>
-                                        <a class="ml-1" href="#" id="mioArtista">Ciao</a>
+                                        <span class="fas fa-music text-primary"></span>
+                                        <a class="ml-1" href="#" id="mioArtista"></a>
                                     </li>
                                 </ul>
-                                <p class="card-text my-4">Aggiungi artisti ai tuoi preferiti per avere più
-                                    suggerimenti su altri artisti che potrebbero piacerti!</p>
+                                <div class="top-buffer-s">
+                                    <p class="card-text my-4">Aggiungi artisti ai tuoi preferiti per avere più
+                                        suggerimenti su altri artisti che potrebbero piacerti!</p>
+                                </div>
                             </div>
                         </div>
 
 
-                        <h2 class="top-buffer-s" id ="nomeArtista">
+                        <h2 class="top-buffer-s" id="nomeArtista">
                             Guarda le playlist pubbliche presenti sulla piattaforma!
                         </h2>
                         <a href="./playlistPubbliche" class=" btn btn-primary top-buffer-s">playlist pubbliche</a>
@@ -339,7 +341,7 @@
 
 
         // guardo gli artisti preferiti dell utente e ne cerco uno che possa piacergli
-        async function artistiConsigliati () {
+        async function artistiConsigliati() {
             let loggato = localStorage.getItem("login")
             if (loggato == "true") {
                 document.getElementById("concertiArtista").classList.remove('d-none');
@@ -350,45 +352,45 @@
                 let idArtista;
                 // prendo tutti gli artisti preferiti dell utente e ne scelgo uno a caso
                 await fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + email, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 })
-                .then((response) => response.json())
-                .then((artisti) => {
-                    let random = Math.floor(Math.random() * artisti.length)  // numero casuale tra 0 e il numero di preferiti
-                    idArtista = artisti[random].idArtista
-                })
-                
+                    .then((response) => response.json())
+                    .then((artisti) => {
+                        let random = Math.floor(Math.random() * artisti.length)  // numero casuale tra 0 e il numero di preferiti
+                        idArtista = artisti[random].idArtista
+                    })
+
                 // ora posso caricare gli artisti consigliati
                 let consigliati
                 fetch("https://api.spotify.com/v1/artists/" + idArtista + "/related-artists", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
                 })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    let random = Math.floor(Math.random() * searchResults.artists.length)  // numero casuale tra 0 e in teoria sempre 20
-                    document.getElementById("artista").href = "/artista?artista=" + searchResults.artists[random].id;
-                    document.getElementById("imgArtista").src = searchResults.artists[random].images[0].url;
-                    document.getElementById("nomeArtista").innerHTML = searchResults.artists[random].name;
-                })
+                    .then((response) => response.json())
+                    .then((searchResults) => {
+                        let random = Math.floor(Math.random() * searchResults.artists.length)  // numero casuale tra 0 e in teoria sempre 20
+                        document.getElementById("artista").href = "/artista?artista=" + searchResults.artists[random].id;
+                        document.getElementById("imgArtista").src = searchResults.artists[random].images[0].url;
+                        document.getElementById("nomeArtista").innerHTML = searchResults.artists[random].name;
+                    })
 
                 // chiedo le informazioni per avere il nome del mio artista motivo del suggerimento
                 // RICONTROLLARE il token 
                 fetch("https://api.spotify.com/v1/artists/" + idArtista, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    document.getElementById("mioArtista").innerHTML = searchResults.name;
-                    document.getElementById("mioArtista").href = "/artista?artista=" + searchResults.id;
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
                 })
+                    .then((response) => response.json())
+                    .then((searchResults) => {
+                        document.getElementById("mioArtista").innerHTML = searchResults.name;
+                        document.getElementById("mioArtista").href = "/artista?artista=" + searchResults.id;
+                    })
 
             }
 

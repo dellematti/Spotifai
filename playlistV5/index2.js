@@ -49,50 +49,7 @@ function deleteUser(res, id) {
 
     res.json(users)
 }
-async function updateUser(res, id, updatedUser) {
-    if (updatedUser.name == undefined) {
-        res.status(400).send("Missing Name")
-        return
-    }
-    if (updatedUser.surname == undefined) {
-        res.status(400).send("Missing Surname")
-        return
-    }
-    if (updatedUser.email == undefined) {
-        res.status(400).send("Missing Email")
-        return
-    }
-    if (updatedUser.password == undefined) {
-        res.status(400).send("Missing Password")
-        return
-    }
-    updatedUser.password = hash(updatedUser.password)
-    try {
 
-        var pwmClient = await new mongoClient(uri).connect()
-
-        var filter = { "_id": new ObjectId(id) }
-
-        var updatedUserToInsert = {
-            $set: updatedUser
-        }
-
-        var item = await pwmClient.db("pwm")
-            .collection('users')
-            .updateOne(filter, updatedUserToInsert)
-
-        res.send(item)
-
-    } catch (e) {
-        console.log('catch in test');
-        if (e.code == 11000) {
-            res.status(400).send("Utente già presente")
-            return
-        }
-        res.status(500).send(`Errore generico: ${e}`)
-
-    };
-}
 
 app.get('/users', auth, async function (req, res) {
     var pwmClient = await new mongoClient(uri).connect()
@@ -101,9 +58,7 @@ app.get('/users', auth, async function (req, res) {
 
 })
 
-
-
-
+// da qua sono le mie api
 
 
 // per registrarsi
@@ -139,24 +94,13 @@ app.post("/users/registrati", auth, async function (req, res) {
         console.log('catch in test');
         res.status(500).send(`Errore generico: ${e}`)
     };
-
-
-    console.log("sono nel post di user e ho fatto addUser")
-    // ora restituisco al front end un valore che mi dice se l utente è stato inserito correttamente oppure no, e sarà il
-    // front end a decidere cosa fare in base alla risposta che gli arriva 
-    // res.end()
 })
 
 
 
 // questa serve per fare il login, controllo se email e password sono nel db
 app.post("/users/login", auth, async function (req, res) {
-    console.log("sono nel post di userlogin")
-    console.log("sono nel post di userlogin e ho controllato")
-    // await checkUser(res, req.body)
-
     var user = req.body
-
     if (!user.email) {
         res.status(400).send("Missing Email")
         return
@@ -173,8 +117,6 @@ app.post("/users/login", auth, async function (req, res) {
     try {
         var presente = await pwmClient.db("spotifai").collection('utenti').findOne({ email: user.email, password: user.password })
         if (presente) {
-            // localStorage.setItem("login", "true")  //non lo setto qua nel serve ma devo settarlo lato client
-            console.log("sono nell if del post dilogin ( check user)")
             res.send(presente)
         } else {
             res.status(401).send("login non riuscito")
@@ -190,11 +132,7 @@ app.post("/users/login", auth, async function (req, res) {
 
 
 
-
-
-
 // api per avere l username dell utente dato un indirizzo email, rispondo con un json formato {username: valore}
-// in maniera più semplice avrei anche potuto salvare l username nel localStorage
 app.get("/users/username/:id", async function (req, res) {
     const email = req.params.id;  //id della richiesta è l email utente, ora posso vedere qual è il suo username
     var pwmClient = await new mongoClient(uri).connect()
@@ -202,7 +140,6 @@ app.get("/users/username/:id", async function (req, res) {
     try {
         var utente = await pwmClient.db("spotifai").collection('utenti').findOne({ email: email })
         if (utente) {
-            // console.log(utente)
             res.send({ username: utente.username })
         } else {
             res.status(401).send("indirizzo email non presente")
@@ -217,21 +154,8 @@ app.get("/users/username/:id", async function (req, res) {
 
 
 
-
-app.put("/users/:id", auth, function (req, res) {
-    updateUser(res, req.params.id, req.body)
-})
-
-app.delete("/users/:id", auth, function (req, res) {
-    deleteUser(res, req.params.id)
-})
-
-
-
-
-
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '/indexV3.html'));    //prima c era index, da /  manda in index in teoria
+    res.sendFile(path.join(__dirname, '/indexV3.html'));   
 });
 
 app.get('/registrati', function (req, res) {
@@ -361,14 +285,10 @@ app.post("/artista", auth, async function (req, res) {
 // api che data l email e l id dell artista, cancella dal db dei preferiti quell artista, associato a quell email
 // app.delete('/user', (req, res) => {
 app.delete("/artista/artistaPreferito/:id/:email", async function (req, res) {
-    console.log("ho chiamato la delete dell artistat preferito")
-    // console.log(req.params)
     var pwmClient = await new mongoClient(uri).connect()   // è giusto dichiarare ogni volta la stessa var  ?????????
 
     try {
         let risultato = await pwmClient.db("spotifai").collection('artistiPreferiti').deleteOne({ emailUtente: req.params.email, idArtista: req.params.id });
-        // console.log(risultato)
-
         // if (risultato.acknowledged == "true")
         if (risultato.acknowledged) {
             res.json(risultato)
@@ -380,11 +300,6 @@ app.delete("/artista/artistaPreferito/:id/:email", async function (req, res) {
         res.status(500).send(`Errore generico: ${e}`)
     }
 })
-
-
-
-
-
 
 
 
@@ -443,9 +358,6 @@ app.get("/playlist/playlistPubbliche", async function (req, res) {
         res.status(500).send(`Errore generico: ${e}`)
     };
 });
-
-
-
 
 
 
@@ -859,19 +771,6 @@ app.post("/users/aggiornaUsername", auth, async function (req, res) {
 
 
 
-
-
-
-
 app.listen(3000, "0.0.0.0", () => {
     console.log("Server partito porta 3000")
 })
-
-
-
-
-/*
-da "/" cè il get che mi "carica" '/registrati'   (non sarebbe da / a registrati direttamente, è solo ora per semplicità), una
-volta che sono in registrati e invio le informazioni del form, lo script fa una post su localhost/user
-app.post(/user) dentro avrà una funzione su come gestire le informazioni, cioè su come metterle nel db
-*/

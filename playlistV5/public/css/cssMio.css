@@ -136,6 +136,9 @@ h2, h3, h6{
 .left-buffer-s { 
     margin-left: 20px; 
 }
+.left-buffer-xs { 
+    margin-left: 5px; 
+}
 .bottom-buffer { 
     margin-bottom: 50px; 
 }
@@ -191,7 +194,6 @@ h2, h3, h6{
 /* devo aggiungere il contorno al box dell input quando ci clicco sopra, sia qua, sia nei box del login */
 
 
-
 /* album */
 
 .link:hover{
@@ -201,29 +203,16 @@ h2, h3, h6{
 }
 
 
+p {
+    display:inline;
+    font-size: 14px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.nav-link {
+    font-size: 16px;
+    position: relative;
+    display: inline-block;
+  }
 
 
 /* le prossime due servono per la conferma di cancellare una playlist */

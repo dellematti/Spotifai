@@ -8,8 +8,6 @@ const path = require('path');
 const uri = "mongodb+srv://dellematti:pangolino@utentispotifai.tprldau.mongodb.net/"
 const db = "spotifai"
 
-// versione pulita e senza spiegazioni di index.js
-
 const app = express()
 app.use(cors())
 // app.use(auth) Per avere apikey su tutti gli endpoint
@@ -25,30 +23,31 @@ function hash(input) {
         .update(input)
         .digest('hex')
 }
-app.get('/users/:id', auth, async function (req, res) {
-    // Ricerca nel database
-    var id = req.params.id
-    var pwmClient = await new mongoClient(uri).connect()
-    var user = await pwmClient.db("pwm")
-        .collection('users')
-        .find({ "_id": new ObjectId(id) })
-        .project({ "password": 0 })
-        .toArray();
-    res.json(user)
-})
+
+// Ricerca nel database
+// app.get('/users/:id', auth, async function (req, res) {
+//     var id = req.params.id
+//     var pwmClient = await new mongoClient(uri).connect()
+//     var user = await pwmClient.db("pwm")
+//         .collection('users')
+//         .find({ "_id": new ObjectId(id) })
+//         .project({ "password": 0 })
+//         .toArray();
+//     res.json(user)
+// })
 
 
 // delete e update non so se servono  (?)
-function deleteUser(res, id) {
-    let index = users.findIndex(user => user.id == id)
-    if (index == -1) {
-        res.status(404).send("User not found")
-        return
-    }
-    users = users.filter(user => user.id != id)
-
-    res.json(users)
-}
+// function deleteUser(res, id) {
+//     let index = users.findIndex(user => user.id == id)
+//     if (index == -1) {
+//         res.status(404).send("User not found")
+//         return
+//     }
+//     users = users.filter(user => user.id != id)
+// 
+//     res.json(users)
+// }
 
 
 app.get('/users', auth, async function (req, res) {

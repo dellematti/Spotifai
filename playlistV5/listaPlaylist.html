@@ -1,14 +1,7 @@
-<!-- pagina con la lista di tutti gli artisti preferiti dell utente, prenderò l id dell
-utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per popolare la pagina -->
-
 
 <!DOCTYPE html>
 
-<!-- il front end parla direttamente con le api di sopstify,e non solo con il mio backend -->
 <html>
-
-
-<!-- PRIMA DI REGISTRARMI DOVRO' CONTROLLARE CHE L EMAIL (O IL NOME) NON SIA PRESENTE NEL DATABASE -->
 
 
 <head>
@@ -52,12 +45,12 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai Home</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
@@ -162,9 +155,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                         <h2>Playlist </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Le tue Playlist</a>
+                                <span class="fas fa-list text-primary"></span>
+                                <p class="left-buffer-xs" >Le tue Playlist</p>
                             </li>
                         </ul>
 
@@ -207,9 +199,8 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
                         <h2>Playlist seguite </h2>
                         <ul class="post-meta mt-3">
                             <li class="d-inline-block mr-3">
-                                <span class="fas fa-clock text-primary"></span><!--cercare altro, oltre a clock-->
-                                <!-- DEVE ESSERE SCRITTO NELLO STESSO FONT MA NON DEVE ESSERE UN LINK    !!!! -->
-                                <a class="ml-1" href="#">Playlist degli altri utenti</a>
+                                <span class="fas fa-list text-primary"></span>
+                                <p class="left-buffer-xs">Playlist degli altri utenti</p>
                             </li>
                         </ul>
 
@@ -341,7 +332,6 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
 
 
         function rendiPubblica (bottonePlaylist) {
-            console.log("sono in rendi pubblica")
             bottonePlaylist.innerHTML = "Rendi privata"
             bottonePlaylist.setAttribute("onclick", "rendiPrivata(this)")
 

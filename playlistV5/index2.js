@@ -24,30 +24,6 @@ function hash(input) {
         .digest('hex')
 }
 
-// Ricerca nel database
-// app.get('/users/:id', auth, async function (req, res) {
-//     var id = req.params.id
-//     var pwmClient = await new mongoClient(uri).connect()
-//     var user = await pwmClient.db("pwm")
-//         .collection('users')
-//         .find({ "_id": new ObjectId(id) })
-//         .project({ "password": 0 })
-//         .toArray();
-//     res.json(user)
-// })
-
-
-// delete e update non so se servono  (?)
-// function deleteUser(res, id) {
-//     let index = users.findIndex(user => user.id == id)
-//     if (index == -1) {
-//         res.status(404).send("User not found")
-//         return
-//     }
-//     users = users.filter(user => user.id != id)
-// 
-//     res.json(users)
-// }
 
 
 app.get('/users', auth, async function (req, res) {
@@ -208,7 +184,6 @@ app.get('/listaArtistiPreferiti/:idUtente', async function (req, res) {
     let id = req.params.idUtente
     let pwmClient = await new mongoClient(uri).connect()
     try {
-        // faccio la project perche restituisco solo l id dell artista, non anche la email utente
         let artisti = await pwmClient.db("spotifai").collection('artistiPreferiti').find({ emailUtente: id }).project({ emailUtente: 0, _id: 0 }).toArray()
         res.send(artisti)
     }
@@ -223,21 +198,17 @@ app.get('/listaArtistiPreferiti/:idUtente', async function (req, res) {
 
 
 
-// dice, dato l id dell artista, se è uno dei preferiti oppure no
-// anche se funziona scritta così  :id/:email  è terribile o ci può stare ???? CONTROLLARE
+// dice, dato l id dell artista, se è uno dei preferiti di un determinato utente oppure no
 app.get("/artista/artistaPreferito/:id/:email", async function (req, res) {
-    // console.log("l artista è tra i preferiti? " ,req.params)
     var pwmClient = await new mongoClient(uri).connect()
 
     try {
         var presente = await pwmClient.db("spotifai").collection('artistiPreferiti').findOne({ emailUtente: req.params.email, idArtista: req.params.id })
 
         if (presente) {
-            res.send(presente)
+            res.send(presente)  //perchè non restituisco true?
         } else {
             res.send(false)
-            // res.status(401).send("login non riuscito")
-            // res.json(items)
         }
     }
     catch (e) {
@@ -276,7 +247,6 @@ app.post("/artista", auth, async function (req, res) {
         console.log('catch in test');
         res.status(500).send(`Errore generico: ${e}`)
     };
-    // res.end()
 })
 
 
@@ -328,11 +298,9 @@ app.get("/playlist/playlistUtente/:id/:email", async function (req, res) {
 
 // restituisce tutte le playlist di un utente
 app.get("/playlist/playlistUtente/:email", async function (req, res) {
-    // console.log(req.params.email)
     let id = req.params.email
     let pwmClient = await new mongoClient(uri).connect()
     try {
-        // faccio la project perche restituisco solo l il nome della playlist, non anche la email utente
         let playlist = await pwmClient.db("spotifai").collection('playlist').find({ emailUtente: id }).project({ emailUtente: 0, _id: 0 }).toArray()
         res.send(playlist)
     }
@@ -479,7 +447,6 @@ app.post("/playlist", auth, async function (req, res) {
 // data l email dell utente, l id della canzone e il nome della playlist, cancella dal db dei brani in playlist 
 // quella canzone
 app.delete("/playlist/cancellaCanzoneSingola/:emailUtente/:idCanzone/:nomePlaylist", async function (req, res) {
-    // console.log(req.params)
     var pwmClient = await new mongoClient(uri).connect()
 
     try {
@@ -502,8 +469,6 @@ app.delete("/playlist/cancellaCanzoneSingola/:emailUtente/:idCanzone/:nomePlayli
 
 // data l email dell utente e il nome della playlist, cancella tutte le canzoni dalla playlist
 app.delete("/playlist/cancellaCanzoni/:emailUtente/:nomePlaylist", async function (req, res) {
-    console.log("entro")
-    console.log("sono in cancella canzoni della playlist ", req.params)
     var pwmClient = await new mongoClient(uri).connect()
 
     try {
@@ -582,6 +547,7 @@ app.post("/playlist/playlistSeguite", auth, async function (req, res) {
     };
 })
 
+
 //  dice se un utente segue una certa playlist
 app.get("/playlist/playlistSeguita/:emailUtente/:nomePlaylist/:emailAutorePlaylist", async function (req, res) {
     var pwmClient = await new mongoClient(uri).connect()
@@ -600,7 +566,7 @@ app.get("/playlist/playlistSeguita/:emailUtente/:nomePlaylist/:emailAutorePlayli
 })
 
 
-//  cancella unna playlist tra le seguite di un certo utente
+//  cancella una playlist tra le seguite di un certo utente
 app.delete("/playlist/playlistSeguita/:emailUtente/:nomePlaylist/:emailAutorePlaylist", async function (req, res) {
     var pwmClient = await new mongoClient(uri).connect()
     try {
@@ -608,7 +574,6 @@ app.delete("/playlist/playlistSeguita/:emailUtente/:nomePlaylist/:emailAutorePla
             .db("spotifai")
             .collection('playlistSeguite')
             .deleteOne({ emailUtente: req.params.emailUtente, nomePlaylist: req.params.nomePlaylist, emailAutorePlaylist: req.params.emailAutorePlaylist });
-        console.log(risultato)
         if (risultato.acknowledged) {
             res.json(risultato)
         } else {
@@ -643,7 +608,6 @@ app.get("/playlistSeguiteDallUtente/:emailUtente", async function (req, res) {
         }
         console.log("tutte", playlist)
         console.log("pubbliche", playlistPubbliche)
-        // res.send(playlist)
         res.send(playlistPubbliche)
     }
     catch (e) {
@@ -730,22 +694,18 @@ app.delete("/users/cancellaUtente/:emailUtente/:password", async function (req, 
 // aggiorna l username dell utente se la password è corretta
 app.post("/users/aggiornaUsername", auth, async function (req, res) {
 
-
-    console.log("sto modificando l username dell utente")
-
     if (!req.body.username) {
         res.status(400).send("Manca l' username dell utente")
         return
     }
     if (!req.body.email) {
-        res.status(400).send("Manca l id della canzone")
+        res.status(400).send("Manca l' email dell utente")
         return
     }
     if (!req.body.password) {
-        res.status(400).send("Manca il nome della playlist")
+        res.status(400).send("Manca la password")
         return
     }
-
 
     req.body.password = hash(req.body.password)
     var pwmClient = await new mongoClient(uri).connect()

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-<!-- il front end parla direttamente con le api di sopstify,e non solo con il mio backend -->
 <html>
 
 
@@ -213,8 +212,6 @@
                                 </div>
                             </div>
 
-
-
                         </div>
 
                     </div>
@@ -287,7 +284,7 @@
     <script>
 
         async function start() {
-            loggato = loginSiNo();
+            loggato = await loginSiNo();
             if(loggato == true) {
                 await elencoPlaylistDropdown();
             }    
@@ -330,14 +327,11 @@
             })
                 .then((response) => response.json())
                 .then((searchResults) => {
-                    console.log(searchResults.items)
-                    // e ora da questi dati devo duplicare le card delle canzoni e farne una per canzone
                     var card = document.getElementById("card-canzone");
                     var cont = document.getElementById("canzoneContainer");
                     cont.innerHTML = "";
                     cont.append(card)
                     for (var i = searchResults.items.length - 1; i >= 0; i--) {
-                        console.log("aono nel for")
                         var clone = card.cloneNode(true)
                         clone.id = "numeroCanzone" + i;
                         clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.items[i].track_number + " " + searchResults.items[i].name;

@@ -125,7 +125,6 @@ function chiediToken() {
   })
     .then((response) => response.json())
     .then((tokenResponse) => {
-      // console.log(tokenResponse.access_token)
       localStorage.setItem("token", tokenResponse.access_token)
     })
 }
@@ -158,7 +157,6 @@ async function elencoPlaylistDropdown() {
     .then((response) => response.json())
     .then((searchResults) => {
       let nomiPlaylist = searchResults;
-      console.log(nomiPlaylist)
       for (var i = 0; i < nomiPlaylist.length; i++) {
         document.getElementById("sceltaPlaylist").innerHTML = nomiPlaylist[i].nomePlaylist
         var card = document.getElementById("sceltaPlaylist")
@@ -192,7 +190,7 @@ function inserisciInPlaylist(nomePlaylist, idCanzone) {
       console.log("canzone inserita nella playlist")
     } else {
       response.text().then(text =>
-        alert(text + "problema inserire canzone nella playlist")   // METTERE QUALCOSA DI DIVERSO DA ALERT!!!
+        alert(text + "problema inserire canzone nella playlist") 
       )
     }
   })

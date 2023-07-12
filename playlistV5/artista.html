@@ -430,7 +430,7 @@
 
 
 
-        async function aggiungiPreferiti(card) {  //invece di fare il casino per prendere l id dalla card, posso anche prenderlo dall url
+        function aggiungiPreferiti(card) {
             let email = localStorage.getItem("loginEmail")
             let idArtista = card.name
 
@@ -438,7 +438,7 @@
                 emailUtente: email,
                 idArtista: idArtista
             }
-            await fetch("http://127.0.0.1:3000/artista?apikey=123456", {
+            fetch("http://127.0.0.1:3000/artista?apikey=123456", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -446,19 +446,15 @@
                 body: JSON.stringify(data)
             }).then(async response => {
                 if (response.ok) {
-                    console.log("l artista è stato inserito nel database")
+                    console.log("l artista è stato inserito nei preferitit")
+                    document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
+                    document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
                 } else {
                     response.text().then(text =>
                         alert(text + " la risposta arriva da artista.html")
                     )
                 }
             })
-            // queste righe sotto le potrei mettere quindi dentro l if sopra !
-
-            // metto await e lascio che faccia prima la fetch o cambio direttamente il text del bottone ? 
-            // cioe, dato che l errore è raro, potrei cambiare direttamente la scritta a prescindere dal risultato della fetch
-            document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
-            document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
         }
 
 
@@ -526,6 +522,7 @@
                 )
         }
 
+        // carica tutti gli album/single dell artista 
         // passare alla funzione la stringa "album" per ricevere gli album, la stringa "single" per i singoli
         function albumArtista(tipoAlbum) {
             let tmp = new URLSearchParams(location.search);

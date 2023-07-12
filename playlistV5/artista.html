@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-<!-- il front end parla direttamente con le api di spotify,e non solo con il mio backend -->
 <html>
 
 
@@ -15,17 +14,14 @@
     <!-- theme meta -->
     <meta name="theme-name" content="gaxlaxy" />
 
-    <!-- ** Plugins Needed for the Project ** -->
     <!-- Bootstrap -->
     <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="plugins/fontawesome/css/all.css"> -->
+    <link rel="stylesheet" href="plugins/fontawesome/css/all.css">
 
     <!-- Main Stylesheet -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <!-- <link href="http://localhost:3000/css/style.css" rel="stylesheet"> -->
     <link href="./css/style.css" rel="stylesheet">
     <link href="./css/cssMio.css" rel="stylesheet">
 
@@ -40,17 +36,9 @@
 
 
 
-
-
-
-
-
-<!-- <body> -->
-
 <body onload="start();">
 
 
-    <!-- invece di bg dark, potrei provare a mettere la navbar nero scuro ( e anche il form della ricerca) -->
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top ">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -58,13 +46,12 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <!-- <ul class="navbar-nav"> -->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai Home</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
                         <form class="d-flex" role="search" action="risultati" method="GET">
@@ -72,8 +59,6 @@
                                 placeholder="Search" aria-label="Search" />
                         </form>
                     </li>
-
-
 
                     <!-- DOVRO' SOSTITUIRE IL DIV SOPRA CON QUELLO SOTTO E VICERVERSA IN BASE AL VALORE DI LOGIN -->
                     <li class="nav-item" id="in">
@@ -146,12 +131,6 @@
 
 
 
-
-
-
-
-
-
         <div class="main-content">
             <!-- start of mobile-nav -->
             <header class="mobile-nav pt-4">
@@ -209,7 +188,6 @@
                             <!-- titoli delle canzoni      lista a destra dell album -->
                             <div class="col-xl-6 col-md-8 " id="listaCanzoni">
                                 <h2 class ="bottom-buffer-xs" style="margin-left: 20px;">Canzoni più ascoltate</h2>
-
                                 <div class="overflow-auto p-3 scrollabile">
                                     <div class="row  right-buffer" id="canzoneContainer">
                                         <div class="col-xl-12 col-md-12 d-none" id="card-canzone">
@@ -285,11 +263,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
-
                     </div>
                 </div>
             </div>

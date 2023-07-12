@@ -729,6 +729,77 @@ app.post("/users/aggiornaUsername", auth, async function (req, res) {
 })
 
 
+// aggiorna la password dell utente se le informazioni sono corrette   // fare la parte di front end e controllare!
+app.post("/users/aggiornaPassword", auth, async function (req, res) {
+// #swagger.tags = ['Users']
+    if (!req.body.email) {
+        res.status(400).send("Manca l' email dell utente")
+        return
+    }
+    if (!req.body.vecchiaPassword) {
+        res.status(400).send("Manca la password da modificare")
+        return
+    }
+    if (!req.body.nuovaPassword) {
+        res.status(400).send("Manca la nuova password")
+        return
+    }
+
+    req.body.vecchiaPassword = hash(req.body.vecchiaPassword)
+    req.body.nuovaPassword = hash(req.body.nuovaPassword)
+    var pwmClient = await new mongoClient(uri).connect()
+    try {
+        var presente = await pwmClient.db("spotifai").collection('utenti').findOne({ email: req.body.email, password: req.body.vecchiaPassword })
+        if (presente) {
+            var items = await pwmClient.db(db).collection('utenti')
+                .updateOne({ email: req.body.email, password: req.body.password }, { $set: { password: req.body.nuovaPassword } })
+            res.json(items)
+        } else {
+            res.status(400).send("l utente non era presente")
+        }
+    }
+    catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+    };
+
+})
+
+
+
+
+
+
+
+
+
+
+// SWAGGER
+
+// npm run swagger-autogen    comando per generare il file swagger-output.json
+// questo perchè in package.json "chiamo" il file swagger.js
+const swaggerUi = require('swagger-ui-express'),
+swaggerDocument = require('./swagger-output.json');
+app.use(
+    '/api-docs',
+    swaggerUi.serve, 
+    swaggerUi.setup(swaggerDocument)
+  );
+
+
+//   const swaggerAutogen = require('swagger-autogen')();
+//   const swaggerAutogen: (outputFile: <string>, endpointsFiles: <Array of string>, data: <object>) => Promise <any>
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(3000, "0.0.0.0", () => {
     console.log("Server partito porta 3000")

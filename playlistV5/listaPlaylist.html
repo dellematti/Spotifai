@@ -236,30 +236,30 @@
                 <div class="container">
                     <div class="row text-center">
                         <div class="col-lg-3 col-sm-6 mb-5">
-                            <h5 class="font-primary text-white mb-4">Inspirations</h5>
+                            <h5 class="font-primary text-white mb-4">Footer</h5>
                             <ul class="list-unstyled">
-                                <li><a href="#!">Privacy State</a></li>
-                                <li><a href="#!">Privacy</a></li>
-                                <li><a href="#!">State</a></li>
-                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-sm-6 mb-5">
-                            <h5 class="font-primary text-white mb-4">Templates</h5>
+                            <h5 class="font-primary text-white mb-4">Footer</h5>
                             <ul class="list-unstyled">
-                                <li><a href="#!">Privacy State</a></li>
-                                <li><a href="#!">Privacy</a></li>
-                                <li><a href="#!">State</a></li>
-                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-sm-6 mb-5">
                             <h5 class="font-primary text-white mb-4">Resource</h5>
                             <ul class="list-unstyled">
-                                <li><a href="#!">Privacy State</a></li>
-                                <li><a href="#!">Privacy</a></li>
-                                <li><a href="#!">State</a></li>
-                                <li><a href="#!">Privacy</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
+                                <li><a href="#!">Footer</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-sm-6 mb-5">
@@ -442,14 +442,6 @@
                     clone.getElementsByClassName("btn")[0].innerHTML = "Rendi pubblica"
                     clone.getElementsByClassName("btn")[0].setAttribute("onclick", "rendiPubblica(this)")
                 }
-
-                // immaginePlaylist(playlists[i].nomePlaylist).then((img) => {  
-                //     console.log(i)
-                //     // if (img) document.getElementById("numeroPlaylist"+i).src = img //come fare a sapere il valore di i??
-                //     // console.log(document.getElementById("numeroPlaylist"+i))    //  da sempre i=6, serve il valore vero di i
-                // })
-
-
                 img = await immaginePlaylist(playlists[i].nomePlaylist, localStorage.getItem("loginEmail") ) // queste due funzionano ma sono lente
                 if (img) clone.getElementsByClassName("card-img")[0].src = img
 

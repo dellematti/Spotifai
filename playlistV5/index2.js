@@ -17,23 +17,11 @@ app.use(express.static("./public"));
 
 
 
-
 function hash(input) {
     return crypto.createHash('md5')
         .update(input)
         .digest('hex')
 }
-
-
-
-app.get('/users', auth, async function (req, res) {
-    var pwmClient = await new mongoClient(uri).connect()
-    var users = await pwmClient.db("pwm").collection('users').find().project({ "password": 0 }).toArray();
-    res.json(users)
-
-})
-
-// da qua sono le mie api
 
 
 // per registrarsi
@@ -350,9 +338,6 @@ app.get("/playlist/:emailUtente/:nomePlaylist/:numero?", async function (req, re
 
 // restituisce tutte le playlist esistenti con un determinato nome , 
 // (è possibile aggiungere un secondo parametro e restituirle in base ad entrambi, il secondo parametro può essere ad esempio l email del creatore)
-// app.get("/playlist/tutteLePlaylist/:nome/:parametro?", async function (req, res)  {
-
-// fare che se non metto nessun nome restituisce tutte le playlist
 app.get("/playlist/:nome?", async function (req, res) {
     let nomePlaylist = req.params.nome
     let pwmClient = await new mongoClient(uri).connect()
@@ -500,7 +485,6 @@ app.delete("/playlist/cancellaPlaylist/:emailUtente/:nomePlaylist", async functi
 
 
 // SEGUIRE LE PLAYLIST
-// sarebbe da aggiungere, che se un utente cancella una sua playlist la cancella anche dalla collezione playlist seguite
 
 // inserisce una playlist di un autore, tra le playlist seguite dall utente
 app.post("/playlist/playlistSeguite", auth, async function (req, res) {
@@ -572,7 +556,7 @@ app.delete("/playlist/playlistSeguita/:emailUtente/:nomePlaylist/:emailAutorePla
 })
 
 
-// restituisce tutte le playlist seguite da un determinato utente  // se faccio "/playlist/playlistSeguiteDallUtente/:emailUtente" non va
+// restituisce tutte le playlist seguite da un determinato utente 
 app.get("/playlistSeguiteDallUtente/:emailUtente", async function (req, res) {
     let emailUtente = req.params.emailUtente
     let pwmClient = await new mongoClient(uri).connect()
@@ -604,10 +588,6 @@ app.get("/playlistSeguiteDallUtente/:emailUtente", async function (req, res) {
 // PLAYLIST PUBBLICA O PRIVATA
 
 
-//IN TUTTO QUESTO FILE (DA RIGA 0 A L ULTIMA) METTERE CHE LE DELETE E PUT NON RICEVONO I PARAMETRI DALL URL
-
-
-
 // rende la playlist di un certo utente privata
 app.put("/playlist/rendiPrivata", async function (req, res) {
     if (!req.body.emailUtente) {
@@ -635,8 +615,7 @@ app.put("/playlist/rendiPrivata", async function (req, res) {
     };
 })
 
-// rende la playlist di un certo utente pubblica    (è identica alla funzione sopra ma il filter è impostato a true)
-// si potrebbe fare una sola put che riceve come parametro true o false 
+// rende la playlist di un certo utente pubblica  
 app.put("/playlist/rendiPubblica", async function (req, res) {
     if (!req.body.emailUtente) {
         res.status(400).send("Manca l' email")
@@ -670,7 +649,38 @@ app.put("/playlist/rendiPubblica", async function (req, res) {
 
 
 // cancella un utente dal db, dovrò cancellare anche le playlist e artisti preferiti
-app.delete("/users/cancellaUtente/:emailUtente/:password", async function (req, res) {
+app.delete("/users/cancellaUtente/:emailUtente", async function (req, res) {
+    var pwmClient = await new mongoClient(uri).connect()
+
+    try {
+        let risultato = await pwmClient
+            .db("spotifai")
+            .collection('canzoniPlaylist')
+            .deleteMany({ emailUtente: req.params.emailUtente});
+            if ( risultato.acknowledged)
+                risultato = await pwmClient
+                .db("spotifai")
+                .collection('utenti')
+                .deleteMany({ email: req.params.emailUtente});
+            if ( risultato.acknowledged)
+                risultato = await pwmClient
+                .db("spotifai")
+                .collection('artistiPreferiti')
+                .deleteMany({ email: req.params.emailUtente});
+            if ( risultato.acknowledged)
+                risultato = await pwmClient
+                .db("spotifai")
+                .collection('playlistSeguite')
+                .deleteMany({ emailAutorePlaylist: req.params.emailUtente});
+        if (risultato.acknowledged) {
+            res.json(risultato)
+        } else {
+            res.status(400).send("il record non era presente all interno del db")
+        }
+    } catch (e) {
+        console.log('catch in test');
+        res.status(500).send(`Errore generico: ${e}`)
+    }
 
 
 })
@@ -713,9 +723,8 @@ app.post("/users/aggiornaUsername", auth, async function (req, res) {
 })
 
 
-// aggiorna la password dell utente se le informazioni sono corrette   // fare la parte di front end e controllare!
+// aggiorna la password dell utente se le informazioni sono corrette 
 app.post("/users/aggiornaPassword", auth, async function (req, res) {
-// #swagger.tags = ['Users']
     if (!req.body.email) {
         res.status(400).send("Manca l' email dell utente")
         return
@@ -756,7 +765,6 @@ app.post("/users/aggiornaPassword", auth, async function (req, res) {
 // SWAGGER
 
 // npm run swagger-autogen    comando per generare il file swagger-output.json
-// questo perchè in package.json "chiamo" il file swagger.js
 const swaggerUi = require('swagger-ui-express'),
 swaggerDocument = require('./swagger-output.json');
 app.use(

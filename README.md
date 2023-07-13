@@ -41,6 +41,8 @@ solo le canzoni, ma anche artisti, album e playlist pubbliche di altri utenti.
 
 ![Untitled Workspace](https://github.com/dellematti/Web/assets/116433753/5271f905-ca87-4f63-8f0b-79ae7a576265)
 
+
+
 In rosso sono indicate le pagine a cui si può accedere solo se l utente è loggato, in blu quelle accessibili a
 chiunque (in azzurro invece le pagine invece dove è possibile accedere solo se non si è loggati).
 La homepage è sempre raggiungibile dalla navbar superiore, da cui si può inoltre fare ricerche e gestire l
@@ -94,11 +96,13 @@ Nel backend vengono offerte api per poter interagire con le playlist, ad esempio
 - Cancellare una playlist
 - Renderla pubblica
 - Renderla privata
+
 Sono poi disponibili api simili per gestire gli artisti preferiti di un utente che rendono possibile:
 - Aggiungere artisti
 - Rimuovere artisti
 - Sapere se un artista è tra i preferiti di un utente
 - Sapere tutti gli artisti preferiti dell’utente
+
 E sono offerte api per la gestione dell’account utente:
 - Registrare un utente
 - Cancellare un utente

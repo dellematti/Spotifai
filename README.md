@@ -69,19 +69,22 @@ che la segue.
 Per ogni playlist (identificata quindi dal nome e dal creatore) ho l id delle canzoni presenti al suo interno. Se
 volessi diminuire il numero di richieste a Spotify potrei salvare altre informazioni oltre all id, come il nome
 della canzone, l autore, etc...
+Sono presenti altre collezioni contenenti le varie informazioni su ogni utente e collezioni per la gestione degli
+artisti preferiti di ogni utente.
 
-Le informazioni che consentono di sapere se l’ utente è loggato ( e chi è l’ utente loggato) sono salvate nel
+Le informazioni che consentono di sapere se l’ utente è loggato ( e l'email dell’ utente loggato) sono salvate nel
 local storage.
 
 Il mio front-end comunica direttamente con le api di Spotify. Nel contesto dell’ esame non serve ma se
 dovessi mettere il sito online, sarebbe preferibile avere la comunicazione con Spotify fatta esclusivamente
 dal mio backend. Questo a causa del codice client di Spotify, che in caso di comunicazione diretta tra il front
 end e Spotify rimane pubblico.
-Simile problema relativo alla sicurezza che può dare problemi mettendo il sito online è il fatto che il
+Simile problema relativo alla sicurezza che può creare inconvenienti mettendo il sito online è il fatto che il
 back-end si basa ciecamente su ciò che arriva dal front-end: ad esempio per aggiungere una canzone ad
-una playlist, all’ api basta un indirizzo email e id playlist e canzone. Basterebbe semplicemente modificare l
+una playlist, all’ api basta un indirizzo email e id di playlist e canzone. Basterebbe semplicemente modificare l
 indirizzo email nel front-end con ispeziona pagina per inserire canzoni nelle playlist degli altri utenti o fare
 altre operazioni indesiderate anche peggiori.
+
 Per la parte di css ho utilizzato un mio file css e una versione che ho modificato di un template (per alcune
 parti specifiche come il preloader e alcune classi di utilità).
 

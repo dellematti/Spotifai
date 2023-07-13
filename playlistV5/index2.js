@@ -38,7 +38,6 @@ app.get('/users', auth, async function (req, res) {
 
 // per registrarsi
 app.post("/users/registrati", auth, async function (req, res) {
-    console.log("sono nel post di user")
     let user = req.body
 
     if (!user.username) {
@@ -84,9 +83,7 @@ app.post("/users/login", auth, async function (req, res) {
         res.status(400).send("Password is missing or too short")
         return
     }
-
     user.password = hash(user.password)
-    console.log(user)
     var pwmClient = await new mongoClient(uri).connect()
 
     try {
@@ -180,7 +177,6 @@ app.get('/playlistPubbliche', function (req, res) {  // pagina con tutte le play
 // api che dato l id (email) dell utente restituisce un array con gli id degli artisti preferiti, se l utente
 // non ha artisti preferiti, restituisce l array vuoto
 app.get('/listaArtistiPreferiti/:idUtente', async function (req, res) {
-    console.log(req.params.idUtente)
     let id = req.params.idUtente
     let pwmClient = await new mongoClient(uri).connect()
     try {
@@ -276,7 +272,6 @@ app.delete("/artista/artistaPreferito/:id/:email", async function (req, res) {
 
 // controlla se per l utente esiste una determinata playlist, richiede l id della playlist (il nome) e l email dell utente
 app.get("/playlist/playlistUtente/:id/:email", async function (req, res) {
-    console.log("get che determina l esistenza di una playlist nel db utente")
     let pwmClient = await new mongoClient(uri).connect()
 
     try {
@@ -360,12 +355,10 @@ app.get("/playlist/:emailUtente/:nomePlaylist/:numero?", async function (req, re
 // fare che se non metto nessun nome restituisce tutte le playlist
 app.get("/playlist/:nome?", async function (req, res) {
     let nomePlaylist = req.params.nome
-    console.log(nomePlaylist)
     let pwmClient = await new mongoClient(uri).connect()
     try {
         // faccio la project perche non serve restituire l id della playlist, e restituisco solo le playlist pubbliche
         let playlist = await pwmClient.db("spotifai").collection('playlist').find({ nomePlaylist: nomePlaylist, pubblica:true }).project({ _id: 0 }).toArray()
-        console.log(playlist)
         res.send(playlist)
     }
     catch (e) {
@@ -376,11 +369,8 @@ app.get("/playlist/:nome?", async function (req, res) {
 
 
 
-
-
 // inserisco il nome della playlist nel db con utenti e playlist
 app.post("/playlist/playlistUtente", async function (req, res) {
-    console.log("post per inserire una nuova playlist nelle playlist di un utente")
 
     if (!req.body.emailUtente) {
         res.status(400).send("Manca l' email")
@@ -411,7 +401,6 @@ app.post("/playlist/playlistUtente", async function (req, res) {
 
 // metto una canzone in una playlist di un determinato utente
 app.post("/playlist", auth, async function (req, res) {
-
     if (!req.body.emailUtente) {
         res.status(400).send("Manca l' email dell utente")
         return
@@ -454,7 +443,6 @@ app.delete("/playlist/cancellaCanzoneSingola/:emailUtente/:idCanzone/:nomePlayli
             .db("spotifai")
             .collection('canzoniPlaylist')
             .deleteOne({ emailUtente: req.params.emailUtente, idCanzone: req.params.idCanzone, nomePlaylist: req.params.nomePlaylist });
-        console.log(risultato)
         if (risultato.acknowledged) {
             res.json(risultato)
         } else {
@@ -476,7 +464,6 @@ app.delete("/playlist/cancellaCanzoni/:emailUtente/:nomePlaylist", async functio
             .db("spotifai")
             .collection('canzoniPlaylist')
             .deleteMany({ emailUtente: req.params.emailUtente, nomePlaylist: req.params.nomePlaylist });
-        console.log(risultato)
         if (risultato.acknowledged) {
             res.json(risultato)
         } else {
@@ -493,7 +480,6 @@ app.delete("/playlist/cancellaCanzoni/:emailUtente/:nomePlaylist", async functio
 // per cancellare completamente una playlist chiamare quest api e quella precedente
 //  o fare in modo che questa chiami la precedente
 app.delete("/playlist/cancellaPlaylist/:emailUtente/:nomePlaylist", async function (req, res) {
-    console.log(req.params)
     var pwmClient = await new mongoClient(uri).connect()
 
     try {
@@ -501,7 +487,6 @@ app.delete("/playlist/cancellaPlaylist/:emailUtente/:nomePlaylist", async functi
             .db("spotifai")
             .collection('playlist')
             .deleteOne({ emailUtente: req.params.emailUtente, nomePlaylist: req.params.nomePlaylist });
-        console.log(risultato)
         if (risultato.acknowledged) {
             res.json(risultato)
         } else {
@@ -595,7 +580,6 @@ app.get("/playlistSeguiteDallUtente/:emailUtente", async function (req, res) {
         // faccio la project perche restituisco solo l il nome della playlist, non anche la email utente
         let playlist = await pwmClient.db("spotifai").collection('playlistSeguite').find({ emailUtente: emailUtente}).project({ emailUtente: 0, _id: 0 }).toArray()
         
-        console.log(playlist)
         let playlistPubbliche = [];
         // per ogni playlist seguita vedo se è pubblica
         // se seguo la playlist e dopo il proprietario la mette privata, la seguirò comunque ma non potrò vederla
@@ -751,9 +735,11 @@ app.post("/users/aggiornaPassword", auth, async function (req, res) {
     try {
         var presente = await pwmClient.db("spotifai").collection('utenti').findOne({ email: req.body.email, password: req.body.vecchiaPassword })
         if (presente) {
+            console.log("entro nell if di update", req.body)
             var items = await pwmClient.db(db).collection('utenti')
-                .updateOne({ email: req.body.email, password: req.body.password }, { $set: { password: req.body.nuovaPassword } })
-            res.json(items)
+                .updateOne({ email: req.body.email, password: req.body.vecchiaPassword }, { $set: { password: req.body.nuovaPassword } })
+                console.log(items)
+                res.json(items)
         } else {
             res.status(400).send("l utente non era presente")
         }
@@ -764,13 +750,6 @@ app.post("/users/aggiornaPassword", auth, async function (req, res) {
     };
 
 })
-
-
-
-
-
-
-
 
 
 
@@ -785,20 +764,6 @@ app.use(
     swaggerUi.serve, 
     swaggerUi.setup(swaggerDocument)
   );
-
-
-//   const swaggerAutogen = require('swagger-autogen')();
-//   const swaggerAutogen: (outputFile: <string>, endpointsFiles: <Array of string>, data: <object>) => Promise <any>
-
-
-
-
-
-
-
-
-
-
 
 
 app.listen(3000, "0.0.0.0", () => {

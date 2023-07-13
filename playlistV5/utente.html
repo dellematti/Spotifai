@@ -13,7 +13,6 @@
     <!-- theme meta -->
     <meta name="theme-name" content="gaxlaxy" />
 
-    <!-- ** Plugins Needed for the Project ** -->
     <!-- Bootstrap -->
     <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="plugins/fontawesome/css/all.css">
@@ -43,12 +42,12 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Spotifai home</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
@@ -179,28 +178,22 @@
 
 
 
-
-
         // serve per aprire e chiudere il form di cambio username
         function cambioUsername() {
             if (document.getElementById("usernameForm").classList.contains("d-none")) {
                 document.getElementById("usernameForm").classList.remove('d-none')
-                // document.getElementById("rowPassword").classList.add('d-none')
             } else {
                 document.getElementById("usernameForm").classList.add('d-none')
-                // document.getElementById("rowPassword").classList.remove('d-none')
             }
         }
 
 
         // serve per aprire e chiudere il form di cambio password
-        function cambioPassword() {    // va bene anche se posso avere contemporaneamente i due bottoni nella pagina?
+        function cambioPassword() {   
             if (document.getElementById("passwordForm").classList.contains("d-none")) {
                 document.getElementById("passwordForm").classList.remove('d-none')
-                // document.getElementById("rowUsername").classList.add('d-none')
             } else {
                 document.getElementById("passwordForm").classList.add('d-none')
-                // document.getElementById("rowUsername").classList.remove('d-none')
             }
         }
 
@@ -265,10 +258,29 @@
             }
 
             var data = {
-                username: username.value,
-                email: email.value,
-                password: password1.value,
-            }
+                email: email,
+                vecchiaPassword: password1.value,
+                nuovaPassword: password3.value,
+            } 
+            console.log(data)
+            fetch("http://127.0.0.1:3000/users/aggiornaPassword?apikey=123456", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(async response => {
+                if (response.ok) {
+                    console.log("la password è stata modificata")
+                    window.location.href = "/"
+                } else {
+                    response.text().then(text =>
+                        alert(text + " la risposta arriva da utente.html")
+                    )
+                }
+            })
+
+
 
 
         }

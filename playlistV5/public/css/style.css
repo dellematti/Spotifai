@@ -1,20 +1,5 @@
-/**
- * WEBSITE: https://themefisher.com
- * TWITTER: https://twitter.com/themefisher
- * FACEBOOK: https://www.facebook.com/themefisher
- * GITHUB: https://github.com/themefisher/
- */
 
 @charset "UTF-8";
-/*!------------------------------------------------------------------
-[MAIN STYLESHEET]
-
-PROJECT:	Galaxy - Personal Blog Template
-VERSION:	v1.0
--------------------------------------------------------------------*/
-/*------------------------------------------------------------------
-[TABLE OF CONTENTS]
--------------------------------------------------------------------*/
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500&family=Montserrat:wght@400;500&display=swap");
 body {
   line-height: 1.65;
@@ -364,7 +349,6 @@ ul, li {
 /*------------------------------------------------------------------
  # blog post style
 -------------------------------------------------------------------*/
-/* qua cè il css dei vari link che devo far diventare scritte normali di testo            !!!!!!!!!     */
 .post-item .card-img-top {
   transition: 0.3s;
 }
@@ -387,16 +371,6 @@ ul, li {
     border: 0 !important;
   }
 }
-
-/* .blockquote {
-  padding: 50px 90px;
-}
-@media (max-width: 575px) {
-  .blockquote {
-    padding: 30px 50px !important;
-  }
-} */
-
 
 
 /*------------------------------------------------------------------

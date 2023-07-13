@@ -40,7 +40,7 @@ solo le canzoni, ma anche artisti, album e playlist pubbliche di altri utenti.
 
 
 ![Untitled Workspace](https://github.com/dellematti/Web/assets/116433753/5271f905-ca87-4f63-8f0b-79ae7a576265)
-
+![Mappa sito](https://github.com/dellematti/Web/blob/main/Mappa%20sito.png)
 
 
 In rosso sono indicate le pagine a cui si può accedere solo se l utente è loggato, in blu quelle accessibili a

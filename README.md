@@ -28,14 +28,13 @@ Dall' homepage si può accedere ad altre pagine in cui si può:
 
 Funzioni del sito:
 Oltre alle playlist personalizzate, ogni utente quando si trova sulla pagina di un artista può scegliere se
-aggiungerlo ai suoi artisti preferiti (o rimuoverlo). Questa scelta resta privata agli occhi degli altri utenti e
-rende possibile all’ utente controllare direttamente la sua pagina di artisti preferiti. Inoltre nell’ homepage
+aggiungerlo ai suoi artisti preferiti (o rimuoverlo). Questa scelta non è visibile agli altri utenti.
+Si può poi controllare tutti gli artisti preferiti tramite la apposita pagina. Inoltre nell’ homepage
 viene ogni volta generato casualmente un artista consigliato. Questo è possibile utilizzando l’api di spotify
 che dato un artista ne restituisce alcuni consigliati.
-Scegliere ogni volta un artista casuale tra la lista dei preferiti dell’ utente e usandolo per ottenerne uno
-casuale tra i consigliati generati da spotify, rende possibile avere un vasto numero di artisti consigliati per
+Scegliere ogni volta un artista casuale tra la lista dei preferiti dell’ utente e usarlo per ottenerne un altro casuale tra la lista dei consigliati generati da spotify, rende possibile avere un vasto numero di artisti consigliati per
 utente da cui scegliere.
-La funzione di ricerca offerto nel sito (accessibile dalla navbar in ogni momento) rende possible cercare non
+La funzione di ricerca offerto nel sito (accessibile dalla navbar in ogni momento) offre la possibilità di cercare non
 solo le canzoni, ma anche artisti, album e playlist pubbliche di altri utenti.
 
 
@@ -61,7 +60,7 @@ In generale da ogni pagina contenente delle canzoni, (come pagine di playlist, a
 ricerca) ho la possibilità di aggiungere la canzone ad una playlist dell'utente.
 
 Il progetto è diviso in front-end e back-end, il front-end è sviluppato con HTML CSS e Javascript mentre il
-backend in Javascript utilizzando nodeJs ed Express.
+backend in Javascript utilizzando NodeJs ed Express.
 Il database è MongoDB, database di tipo NoSQL. Nel database ho diverse collezioni: ho usato due collezioni
 per le playlist, una per rappresentare la playlist e il proprietario ( e il fatto che sia pubblica o privata) e una
 collezione per le playlist seguite, dove ho per ogni document il nome della playlist, il creatore e la persona

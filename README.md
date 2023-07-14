@@ -2,10 +2,10 @@
 Progetto per esame programmazione web
 
 Spotifai è un applicazione web clone di Spotify. L’ applicazione si occupa della gestione delle playlist di
-canzoni. Deve essere possibile per ogni utente creare una propria playlist e poterla successivamente
+canzoni. Deve essere possibile per ogni utente creare playlist e poterle successivamente
 modificare e cancellare.
-Lo scopo è quello di poter interagire con le playlist degli altri utenti visualizzandole e seguendole, questo
-solo nel caso esse siano pubbliche (ogni utente ha la possibilità di rendere le sue playlist pubbliche o
+Lo scopo è quello di poter interagire, oltre che con le proprie, anche con le playlist degli altri utenti visualizzandole e seguendole,
+questo solo nel caso esse siano pubbliche (ogni utente ha la possibilità di rendere le sue playlist pubbliche o
 private).
 
 Se una playlist pubblica con dei follower diventa privata, ho deciso di non cancellare i follower ma

@@ -221,7 +221,7 @@ app.post("/artista", auth, async function (req, res) {
     try {
         var presente = await pwmClient.db("spotifai").collection('artistiPreferiti').findOne({ emailUtente: req.body.emailUtente, idArtista: req.body.idArtista })
         if (presente) {
-            res.status(400).send("il record è già presente")  //devo restituire un errore se è già presente? credo di si
+            res.status(400).send("il record è già presente") 
         } else {
             var items = await pwmClient.db(db).collection('artistiPreferiti').insertOne(req.body)
             res.json(items)
@@ -398,8 +398,6 @@ app.post("/playlist", auth, async function (req, res) {
         res.status(400).send("Manca il nome della playlist")
         return
     }
-
-
     var pwmClient = await new mongoClient(uri).connect()
     try {
         var presente = await pwmClient.db("spotifai").collection('canzoniPlaylist').findOne({ emailUtente: req.body.emailUtente, idCanzone: req.body.idCanzone, nomePlaylist: req.body.nomePlaylist })
@@ -765,6 +763,7 @@ app.post("/users/aggiornaPassword", auth, async function (req, res) {
 // SWAGGER
 
 // npm run swagger-autogen    comando per generare il file swagger-output.json
+// funziona perche ho messo lo script nel package.json
 const swaggerUi = require('swagger-ui-express'),
 swaggerDocument = require('./swagger-output.json');
 app.use(

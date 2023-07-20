@@ -16,10 +16,7 @@ fetch(url, {
     .then((response) => response.json())
     .then((tokenResponse) =>
         console.log(tokenResponse.access_token)
-        //Sarebbe opportuno salvare il token nel local storage
     )
-
-
 
     //per ora ho salvato come script direttamente in indexV3
 

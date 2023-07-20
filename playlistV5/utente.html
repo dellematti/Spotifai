@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                             <div class="row top-buffer">
-                                <a href="./login" id="linkRegistrati">Oppure elimina il tuo account cliccando qui</a>
+                                <a href="javascript:cancellaUtente()" id="linkeliminaUtente">Oppure elimina il tuo account cliccando qui</a>
                             </div>
                         </div>
                     </div>
@@ -177,6 +177,27 @@
         }
 
 
+
+        function cancellaUtente() {
+            let email = localStorage.getItem("loginEmail")
+            fetch("http://127.0.0.1:3000/users/cancellaUtente/" + email, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                // body: JSON.stringify(data)  // dovrei cambiare e passare l email nel body, e NON come parametro
+            }).then(async response => {
+                if (response.ok) {
+                    console.log("l utente è stato cancellato")
+                    logout()
+                    window.location.href = "/"
+                } else {
+                    response.text().then(text =>
+                        alert(text + " la risposta arriva da utente.html")
+                    )
+                }
+            })
+        }
 
         // serve per aprire e chiudere il form di cambio username
         function cambioUsername() {

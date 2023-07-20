@@ -16,16 +16,6 @@
   "schemes": [],
   "securityDefinitions": {},
   "paths": {
-    "/users": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/users/registrati": {
       "post": {
         "description": "",
@@ -807,7 +797,7 @@
         }
       }
     },
-    "/users/cancellaUtente/{emailUtente}/{password}": {
+    "/users/cancellaUtente/{emailUtente}": {
       "delete": {
         "description": "",
         "parameters": [
@@ -816,17 +806,17 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -869,9 +859,6 @@
     },
     "/users/aggiornaPassword": {
       "post": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
         "parameters": [
           {
@@ -887,9 +874,6 @@
                   "example": "any"
                 },
                 "nuovaPassword": {
-                  "example": "any"
-                },
-                "password": {
                   "example": "any"
                 }
               }

@@ -17,7 +17,6 @@ fetch(url, {
     .then((tokenResponse) =>
         console.log(tokenResponse.access_token)
     )
-
     //per ora ho salvato come script direttamente in indexV3
 
 

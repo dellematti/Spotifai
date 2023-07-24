@@ -34,11 +34,7 @@
 
 
 
-
-
-
 <body>
-
     <!-- navbar in alto -->
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top ">
         <div class="container-fluid">
@@ -52,7 +48,7 @@
                         <a class="nav-link active" aria-current="page" href="/">Spotifai</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!--me-auto sposta gli elementi a sinistra-->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
                     <li class="nav-item">
                         <form class="d-flex" role="search" action="risultati" method="GET">
                             <input class="form-control me-2 bg-dark" id="ricerca_homepage" type="text" name="ricerca"
@@ -170,9 +166,7 @@
             }
             console.log(data)
 
-            // andiamo su /users 
             fetch("http://127.0.0.1:3000/users/registrati?apikey=123456", {
-            // fetch("http://127.0.0.1:3100/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -182,18 +176,13 @@
                 if (response.ok) {
                     // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
                     window.location.href = "/"
-                    console.log("l utente è stato inserito nel database olè")
+                    console.log("l utente è stato inserito nel database")
                 } else {
                     response.text().then(text =>
-                        // se la post non ha funzionato, entriamo in questo else e nell variabile text vediamo il perchè
                         alert(text + " la risposta arriva da registrati.html")
                     )
-
                 }
-
             })
-
-
 
 
         }

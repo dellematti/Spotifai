@@ -83,8 +83,8 @@ async function loginSiNo() {
     return true;
   } else {
     document.getElementById("out").style.display = "none"; //invece se non sono loggato nascondo il tasto logout  
-    document.getElementById("linkArtisti").href = "/login"; 
-    document.getElementById("linkPlaylist").href = "/login";  
+    document.getElementById("linkArtisti").href = "/login";
+    document.getElementById("linkPlaylist").href = "/login";
     return false;
   }
 }
@@ -190,8 +190,44 @@ function inserisciInPlaylist(nomePlaylist, idCanzone) {
       console.log("canzone inserita nella playlist")
     } else {
       response.text().then(text =>
-        alert(text + "problema inserire canzone nella playlist") 
+        alert(text + "problema inserire canzone nella playlist")
       )
     }
   })
+}
+
+
+
+
+// carica tutti gli album/single dell artista 
+// passare alla funzione la stringa "album" per ricevere gli album, la stringa "single" per i singoli
+function albumArtista(tipoAlbum) {
+  let tmp = new URLSearchParams(location.search);
+  let artistaID = tmp.get("artista")
+  fetch('https://api.spotify.com/v1/artists/' + artistaID + '/albums?include_groups=' + tipoAlbum + '&limit=50', {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      var card = document.getElementById("card-" + tipoAlbum);
+      var cont = document.getElementById(tipoAlbum + "Container");
+      cont.innerHTML = "";
+      cont.append(card)
+      for (var i = 0; i < searchResults.total; i++) {  // qua cè total e non length !!
+        var clone = card.cloneNode(true)
+        clone.id = "artista_" + tipoAlbum + i;
+        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.items[i].name;
+        clone.getElementsByClassName("card-text")[0].innerHTML = searchResults.items[i].artists[0].name;
+        clone.getElementsByClassName("card-img")[0].src = searchResults.items[i].images[0].url;
+        clone.getElementsByClassName('text-muted')[0].innerHTML = searchResults.items[i].album_group;
+        clone.getElementsByClassName('stretched-link')[0].href = "/album?album=" + searchResults.items[i].id;
+        clone.classList.remove('d-none');
+        card.before(clone);
+      }
+    }
+    )
+
 }

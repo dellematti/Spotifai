@@ -331,10 +331,6 @@
     <script>
 
 
-
-
-
-
         async function start() {
             loggato = await loginSiNo();
             if (loggato == true){
@@ -344,90 +340,6 @@
             albumArtista("album");  // carico l elenco di album dell artista
             albumArtista("single");  // carico l elenco di album dell artista
             controllaPreferiti();   // vedo se l artista è tra i miei preferiti o no
-        }
-
-
-
-
-
-        // controlla se l artista è uno dei preferiti, se si modifica il bottone da "aggiungi a preferiti" a "rimuovi da preferiti"
-        async function controllaPreferiti() {
-            if (loggato != true) return; //se non sono loggato non controllo
-            let tmp = new URLSearchParams(location.search);
-            let artistaID = tmp.get("artista")
-
-            let email = localStorage.getItem("loginEmail")
-            let presente = false;
-            await fetch("http://127.0.0.1:3000/artista/artistaPreferito/" + artistaID + "/" + email, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    if (searchResults) {
-                        document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
-                        document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
-                    } else {
-                        console.log("L artista non era tra i preferiti")
-                    }
-                })
-        }
-
-
-
-        // rimuove l artista dalla lista degli artisti preferiti dell utente
-        async function rimuoviPreferiti(card) {
-            let tmp = new URLSearchParams(location.search);
-            let artistaID = tmp.get("artista")
-
-            let email = localStorage.getItem("loginEmail")
-            await fetch("http://127.0.0.1:3000/artista/artistaPreferito/" + artistaID + "/" + email, {
-                method: 'DELETE',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    //se il record è stato effettivamente eliminato, allora searchResults.acknowledged == true
-                    if (searchResults.acknowledged) {
-                        document.getElementById("bottonePreferiti").value = "aggiungi ai preferiti"
-                        document.getElementById("bottonePreferiti").setAttribute("onclick", "aggiungiPreferiti(this);return false;");
-                    } else {
-                        console.log("Il record non è stato eliminato correttamente dal database")
-                    }
-                })
-        }
-
-
-
-        function aggiungiPreferiti(card) {
-            let email = localStorage.getItem("loginEmail")
-            let idArtista = card.name
-
-            let data = {
-                emailUtente: email,
-                idArtista: idArtista
-            }
-            fetch("http://127.0.0.1:3000/artista?apikey=123456", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    console.log("l artista è stato inserito nei preferitit")
-                    document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
-                    document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
-                } else {
-                    response.text().then(text =>
-                        alert(text + " la risposta arriva da artista.html")
-                    )
-                }
-            })
         }
 
 
@@ -458,42 +370,6 @@
                 })
         }
 
-
-
-        // dato l id dell artista genero le card contenenti le info delle traccie, sono le card laterali
-        function listaCanzoniArtista(artistaID) {
-            fetch("https://api.spotify.com/v1/artists/" + artistaID + "/top-tracks?market=Us", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    var card = document.getElementById("card-canzone");
-                    var cont = document.getElementById("canzoneContainer");
-                    cont.innerHTML = "";
-                    cont.append(card)
-                    for (var i = searchResults.tracks.length - 1; i >= 0; i--) {
-                        var clone = card.cloneNode(true)
-                        clone.id = "numeroCanzone" + i;
-                        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.tracks[i].name;
-                        clone.getElementsByClassName('text-muted')[0].innerHTML = msConversioneMin(searchResults.tracks[i].duration_ms);
-
-
-                        // l id di ogni "aggiungi a playlist", sarà l id della canzone 
-                        //devo metterlo a tutti i dropdown da 1 in poi (0 è quello sovrascritto)
-                        // sarebbe meglio non mettere id uguali, magari trovare altro in cui metterlo
-                        for (var j = 1; j < clone.getElementsByClassName('dropdown-item').length; j++) {
-                            clone.getElementsByClassName('dropdown-item')[j].setAttribute("id", searchResults.tracks[i].id);
-                        }
-                        clone.classList.remove('d-none');
-                        card.after(clone);
-
-                    }
-                }
-                )
-        }
 
 
 

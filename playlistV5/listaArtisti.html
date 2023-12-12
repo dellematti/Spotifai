@@ -274,54 +274,6 @@ utente ( cioè la sua email) dal localStorage e chiamerò il mio backEnd per pop
         }
 
 
-        // questa funzione serve solo per prendere dal backend la lista di artisti preferiti dell utente
-        function caricaArtistiPreferiti() {
-            fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + localStorage.getItem("loginEmail"), {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    if (searchResults.length > 0)
-                        popolaArtistiPreferiti(searchResults)
-                    // se non ho risultati posso modificare un qualche div per scrivere all interno della pagina di aggiungere gli artisti
-                })
-        }
-
-
-
-        // ricevo un array di id con gli artisti preferiti e popolo la pagina
-        function popolaArtistiPreferiti(artisti) {
-            console.log("Sono in popolaArtisti")
-            // controllare il token prima di fare la fetch all api di spotify
-
-            for (var i = 0; i < artisti.length; i++) {
-                var card = document.getElementById("card-preferiti");
-                var cont = document.getElementById("preferitiContainer");
-                cont.innerHTML = "";
-                cont.append(card)
-                fetch('https://api.spotify.com/v1/artists/' + artisti[i].idArtista, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((searchResults) => {
-                        var clone = card.cloneNode(true)
-                        clone.id = "idArtista" + searchResults.id;
-                        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
-                        clone.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
-                        clone.getElementsByClassName('stretched-link')[0].href = "/artista?artista=" + searchResults.id;
-                        clone.classList.remove('d-none');
-                        card.after(clone);
-                    })
-            }
-        }
-
-
-
     </script>
 
 

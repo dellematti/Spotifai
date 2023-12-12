@@ -231,3 +231,182 @@ function albumArtista(tipoAlbum) {
     )
 
 }
+
+
+
+// controlla se l artista è uno dei preferiti, se si modifica il bottone da "aggiungi a preferiti" a "rimuovi da preferiti"
+// chiamato nella pagina artista
+async function controllaPreferiti() {
+  if (loggato != true) return; //se non sono loggato non controllo
+  let tmp = new URLSearchParams(location.search);
+  let artistaID = tmp.get("artista")
+
+  let email = localStorage.getItem("loginEmail")
+  let presente = false;
+  await fetch("http://127.0.0.1:3000/artista/artistaPreferito/" + artistaID + "/" + email, {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      if (searchResults) {
+        document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
+        document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
+      } else {
+        console.log("L artista non era tra i preferiti")
+      }
+    })
+}
+
+
+
+// rimuove l artista dalla lista degli artisti preferiti dell utente
+// chiamata nella pagina artista
+async function rimuoviPreferiti(card) {
+  let tmp = new URLSearchParams(location.search);
+  let artistaID = tmp.get("artista")
+
+  let email = localStorage.getItem("loginEmail")
+  await fetch("http://127.0.0.1:3000/artista/artistaPreferito/" + artistaID + "/" + email, {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      //se il record è stato effettivamente eliminato, allora searchResults.acknowledged == true
+      if (searchResults.acknowledged) {
+        document.getElementById("bottonePreferiti").value = "aggiungi ai preferiti"
+        document.getElementById("bottonePreferiti").setAttribute("onclick", "aggiungiPreferiti(this);return false;");
+      } else {
+        console.log("Il record non è stato eliminato correttamente dal database")
+      }
+    })
+}
+
+
+
+// chiamato nella pagina artista
+function aggiungiPreferiti(card) {
+  let email = localStorage.getItem("loginEmail")
+  let idArtista = card.name
+
+  let data = {
+    emailUtente: email,
+    idArtista: idArtista
+  }
+  fetch("http://127.0.0.1:3000/artista?apikey=123456", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("l artista è stato inserito nei preferitit")
+      document.getElementById("bottonePreferiti").value = "rimuovi dai preferiti"
+      document.getElementById("bottonePreferiti").setAttribute("onclick", "rimuoviPreferiti(this);return false;");
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da artista.html")
+      )
+    }
+  })
+}
+
+
+
+
+
+
+// dato l id dell artista genero le card contenenti le info delle traccie, sono le card laterali
+// chiamato nella pagina artista
+function listaCanzoniArtista(artistaID) {
+  fetch("https://api.spotify.com/v1/artists/" + artistaID + "/top-tracks?market=Us", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      var card = document.getElementById("card-canzone");
+      var cont = document.getElementById("canzoneContainer");
+      cont.innerHTML = "";
+      cont.append(card)
+      for (var i = searchResults.tracks.length - 1; i >= 0; i--) {
+        var clone = card.cloneNode(true)
+        clone.id = "numeroCanzone" + i;
+        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.tracks[i].name;
+        clone.getElementsByClassName('text-muted')[0].innerHTML = msConversioneMin(searchResults.tracks[i].duration_ms);
+
+
+        // l id di ogni "aggiungi a playlist", sarà l id della canzone 
+        //devo metterlo a tutti i dropdown da 1 in poi (0 è quello sovrascritto)
+        // sarebbe meglio non mettere id uguali, magari trovare altro in cui metterlo
+        for (var j = 1; j < clone.getElementsByClassName('dropdown-item').length; j++) {
+          clone.getElementsByClassName('dropdown-item')[j].setAttribute("id", searchResults.tracks[i].id);
+        }
+        clone.classList.remove('d-none');
+        card.after(clone);
+
+      }
+    }
+    )
+}
+
+
+
+
+
+// questa funzione serve solo per prendere dal backend la lista di artisti preferiti dell utente
+// chiamata in listaArtisti.html
+function caricaArtistiPreferiti() {
+  fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + localStorage.getItem("loginEmail"), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      if (searchResults.length > 0)
+        popolaArtistiPreferiti(searchResults)
+      // se non ho risultati posso modificare un qualche div per scrivere all interno della pagina di aggiungere gli artisti
+    })
+}
+
+
+
+// ricevo un array di id con gli artisti preferiti e popolo la pagina
+// chiamata in listaArtisti.html
+function popolaArtistiPreferiti(artisti) {
+  console.log("Sono in popolaArtisti")
+  // controllare il token prima di fare la fetch all api di spotify
+
+  for (var i = 0; i < artisti.length; i++) {
+    var card = document.getElementById("card-preferiti");
+    var cont = document.getElementById("preferitiContainer");
+    cont.innerHTML = "";
+    cont.append(card)
+    fetch('https://api.spotify.com/v1/artists/' + artisti[i].idArtista, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((searchResults) => {
+        var clone = card.cloneNode(true)
+        clone.id = "idArtista" + searchResults.id;
+        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
+        clone.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
+        clone.getElementsByClassName('stretched-link')[0].href = "/artista?artista=" + searchResults.id;
+        clone.classList.remove('d-none');
+        card.after(clone);
+      })
+  }
+}
+

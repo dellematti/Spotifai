@@ -148,51 +148,6 @@
     <!-- Main Script -->
     <script src="js/script.js"></script>
 
-    <!-- Script del login,     volendo si può spostarlo in un file js separato -->
-    <script>
-
-
-
-
-        function login() {
-            var email = document.getElementById('email')
-            var password = document.getElementById('password')
-
-
-            var data = {
-                email: email.value,
-                password: password.value,
-            }
-            console.log("provo il login" + data)
-
-            fetch("http://127.0.0.1:3000/users/login?apikey=123456", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    console.log("ti sei loggato")
-                    localStorage.setItem("login", "true")
-                    localStorage.setItem("loginEmail", email.value)
-                    window.location.href = "/"
-                    // se mi sono loggato allora metto a true il valore di login nel localstorage, poi lo controllo nelle altre pagine
-                } else {
-                    response.text().then(text =>
-                        alert(text + " login non ha funzionato")
-                    )
-
-                }
-
-            })
-
-
-
-
-        }
-    </script>
-
 
 
 </body>

@@ -410,3 +410,231 @@ function popolaArtistiPreferiti(artisti) {
   }
 }
 
+
+// pagina UTENTE
+
+
+// chiamata da utente.html
+function nuovaPassword() {
+  let email = localStorage.getItem("loginEmail")
+  var password1 = document.getElementById('passwordVecchia')
+  var password2 = document.getElementById('passwordNuova1')
+  var password3 = document.getElementById('passwordNuova2')
+
+  if (password1.value != password2.value || password1.value.length < 7) {
+    password1.classList.add('border')
+    password1.classList.add('border-danger')
+    password2.classList.add('border')
+    password2.classList.add('border-danger')
+  } else {
+    password1.classList.remove('border')
+    password1.classList.remove('border-danger')
+    password2.classList.remove('border')
+    password2.classList.remove('border-danger')
+  }
+
+  var data = {
+    email: email,
+    vecchiaPassword: password1.value,
+    nuovaPassword: password3.value,
+  }
+  console.log(data)
+  fetch("http://127.0.0.1:3000/users/aggiornaPassword?apikey=123456", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("la password è stata modificata")
+      window.location.href = "/"
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da utente.html")
+      )
+    }
+  })
+
+
+}
+
+
+
+
+
+// cambia l username dell utente se la password è corretta
+// chiamata da utente.html
+function nuovoUsername() {
+  let email = localStorage.getItem("loginEmail")
+  var username = document.getElementById('username')
+  var password = document.getElementById('password')
+
+  if (password.value.length < 7) {
+    password.classList.add('border')
+    password.classList.add('border-danger')
+  } else {
+    password.classList.remove('border')
+    password.classList.remove('border-danger')
+  }
+
+  var data = {
+    username: username.value,
+    email: email,
+    password: password.value,
+  }
+
+  fetch("http://127.0.0.1:3000/users/aggiornaUsername?apikey=123456", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("l utente è stato modificato")
+      window.location.href = "/"
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da utente.html")
+      )
+    }
+  })
+
+}
+
+
+
+
+// chiamata da utente.html
+function cancellaUtente() {
+  let email = localStorage.getItem("loginEmail")
+  fetch("http://127.0.0.1:3000/users/cancellaUtente/" + email, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    // body: JSON.stringify(data)  // dovrei cambiare e passare l email nel body, e NON come parametro
+  }).then(async response => {
+    if (response.ok) {
+      console.log("l utente è stato cancellato")
+      logout()
+      window.location.href = "/"
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da utente.html")
+      )
+    }
+  })
+}
+
+// serve per aprire e chiudere il form di cambio username 
+// chiamata da utente.html
+function cambioUsername() {
+  if (document.getElementById("usernameForm").classList.contains("d-none")) {
+    document.getElementById("usernameForm").classList.remove('d-none')
+  } else {
+    document.getElementById("usernameForm").classList.add('d-none')
+  }
+}
+
+
+// serve per aprire e chiudere il form di cambio password
+// chiamata da utente.html
+function cambioPassword() {
+  if (document.getElementById("passwordForm").classList.contains("d-none")) {
+    document.getElementById("passwordForm").classList.remove('d-none')
+  } else {
+    document.getElementById("passwordForm").classList.add('d-none')
+  }
+}
+
+
+// pagina registrazione
+
+function registrati() {
+  var email = document.getElementById('email')
+  var password1 = document.getElementById('password1')
+  var password2 = document.getElementById('password2')
+  var username = document.getElementById('username')
+
+  if (password1.value != password2.value || password1.value.length < 7) {
+    password1.classList.add('border')
+    password1.classList.add('border-danger')
+    password2.classList.add('border')
+    password2.classList.add('border-danger')
+  } else {
+    password1.classList.remove('border')
+    password1.classList.remove('border-danger')
+    password2.classList.remove('border')
+    password2.classList.remove('border-danger')
+  }
+
+  var data = {
+    username: username.value,
+    email: email.value,
+    password: password1.value,
+
+  }
+  console.log(data)
+
+  fetch("http://127.0.0.1:3000/users/registrati?apikey=123456", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
+      window.location.href = "/"
+      console.log("l utente è stato inserito nel database")
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da registrati.html")
+      )
+    }
+  })
+
+
+}
+
+// pagina login
+function login() {
+  var email = document.getElementById('email')
+  var password = document.getElementById('password')
+
+
+  var data = {
+    email: email.value,
+    password: password.value,
+  }
+  console.log("provo il login" + data)
+
+  fetch("http://127.0.0.1:3000/users/login?apikey=123456", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("ti sei loggato")
+      localStorage.setItem("login", "true")
+      localStorage.setItem("loginEmail", email.value)
+      window.location.href = "/"
+      // se mi sono loggato allora metto a true il valore di login nel localstorage, poi lo controllo nelle altre pagine
+    } else {
+      response.text().then(text =>
+        alert(text + " login non ha funzionato")
+      )
+
+    }
+
+  })
+
+
+
+
+}
+

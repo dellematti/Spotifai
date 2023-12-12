@@ -136,61 +136,6 @@
     <script src="js/script.js"></script>
 
 
-    <!-- Script della registrazione ,     volendo si può spostarlo in un file js separato -->
-    <script>
-
-
-        function registrati() {
-            var email = document.getElementById('email')
-            var password1 = document.getElementById('password1')
-            var password2 = document.getElementById('password2')
-            var username = document.getElementById('username')
-
-            if (password1.value != password2.value || password1.value.length < 7) {
-                password1.classList.add('border')
-                password1.classList.add('border-danger')
-                password2.classList.add('border')
-                password2.classList.add('border-danger')
-            } else {
-                password1.classList.remove('border')
-                password1.classList.remove('border-danger')
-                password2.classList.remove('border')
-                password2.classList.remove('border-danger')
-            }
-
-            var data = {
-                username: username.value,
-                email: email.value,
-                password: password1.value,
-
-            }
-            console.log(data)
-
-            fetch("http://127.0.0.1:3000/users/registrati?apikey=123456", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(async response => {
-                if (response.ok) {
-                    // se la post ha funzionato correttamente entriamo in questo if e facciamo un redirect
-                    window.location.href = "/"
-                    console.log("l utente è stato inserito nel database")
-                } else {
-                    response.text().then(text =>
-                        alert(text + " la risposta arriva da registrati.html")
-                    )
-                }
-            })
-
-
-        }
-
-
-    </script>
-
-
 
 </body>
 

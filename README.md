@@ -1,6 +1,8 @@
 # Web
 Progetto per esame programmazione web
 
+![Mappa sito](https://github.com/dellematti/Web/blob/main/Screenshot.png)
+
 Spotifai è un applicazione web clone di Spotify. L’ applicazione si occupa della gestione delle playlist di
 canzoni. Deve essere possibile per ogni utente creare playlist e poterle successivamente
 modificare e cancellare.

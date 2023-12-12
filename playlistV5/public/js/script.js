@@ -638,3 +638,297 @@ function login() {
 
 }
 
+
+
+// ListaPlaylist
+
+
+function rendiPrivata(bottonePlaylist) {
+  bottonePlaylist.innerHTML = "Rendi pubblica"
+  bottonePlaylist.setAttribute("onclick", "rendiPubblica(this)")
+
+  let email = localStorage.getItem("loginEmail")
+  let data = {
+    emailUtente: email,
+    nomePlaylist: bottonePlaylist.value,
+  }
+  fetch('http://127.0.0.1:3000/playlist/rendiPrivata/', {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("la playlist ora è privata")
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da listaPlaylist.html")
+      )
+    }
+  })
+}
+
+
+function rendiPubblica(bottonePlaylist) {
+  bottonePlaylist.innerHTML = "Rendi privata"
+  bottonePlaylist.setAttribute("onclick", "rendiPrivata(this)")
+
+  let email = localStorage.getItem("loginEmail")
+  let data = {
+    emailUtente: email,
+    nomePlaylist: bottonePlaylist.value,
+  }
+  fetch('http://127.0.0.1:3000/playlist/rendiPubblica/', {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("la playlist ora è pubblica")
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da listaPlaylist.html")
+      )
+    }
+  })
+}
+
+
+
+
+// controlla se esiste già una playlist con un certo nome associata all utente, se non c è la aggiunge
+function controllaPlaylist() {
+  var nome = document.getElementById('nuovaPlaylist').value;
+  fetch('http://127.0.0.1:3000/playlist/playlistUtente/' + localStorage.getItem("loginEmail") + "/" + nome, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      console.log(searchResults)
+      if (searchResults == false) nuovaPlaylist(nome);
+      else alert("la playlist esiste già")
+    })
+}
+
+
+// inserisce nel db una playlist nuova
+async function nuovaPlaylist(nome) {
+  let email = localStorage.getItem("loginEmail")
+
+  let data = {
+    emailUtente: email,
+    nomePlaylist: nome,
+    pubblica: true
+  }
+  await fetch('http://127.0.0.1:3000/playlist/playlistUtente/', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(async response => {
+    if (response.ok) {
+      console.log("la playlist è stata inserita nel database olè")
+    } else {
+      response.text().then(text =>
+        alert(text + " la risposta arriva da listaPlaylist.html")
+      )
+    }
+  })
+  location.reload() //avendo aggiunto una playlist devo ricaricare la pagina
+}
+
+
+
+// HOMEPAGE
+
+
+// guardo gli artisti preferiti dell utente e ne cerco uno che possa piacergli
+async function artistiConsigliati() {
+  let loggato = localStorage.getItem("login")
+  if (loggato == "true") {
+    document.getElementById("concertiArtista").classList.remove('d-none');
+    // ora prendo un artista preferito a caso tra quelli dell utente
+    // se non ce nè nessuno scrivo di aggiungerli
+
+    let email = localStorage.getItem("loginEmail")
+    let idArtista;
+    // prendo tutti gli artisti preferiti dell utente e ne scelgo uno a caso
+    await fetch('http://127.0.0.1:3000/listaArtistiPreferiti/' + email, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((artisti) => {
+        let random = Math.floor(Math.random() * artisti.length)  // numero casuale tra 0 e il numero di preferiti
+        idArtista = artisti[random].idArtista
+      })
+
+    // ora posso caricare gli artisti consigliati
+    let consigliati
+    fetch("https://api.spotify.com/v1/artists/" + idArtista + "/related-artists", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((searchResults) => {
+        let random = Math.floor(Math.random() * searchResults.artists.length)  // numero casuale tra 0 e in teoria sempre 20
+        document.getElementById("artista").href = "/artista?artista=" + searchResults.artists[random].id;
+        document.getElementById("imgArtista").src = searchResults.artists[random].images[0].url;
+        document.getElementById("nomeArtista").innerHTML = searchResults.artists[random].name;
+      })
+
+    // chiedo le informazioni per avere il nome del mio artista motivo del suggerimento
+    // RICONTROLLARE il token 
+    fetch("https://api.spotify.com/v1/artists/" + idArtista, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((searchResults) => {
+        document.getElementById("mioArtista").innerHTML = searchResults.name;
+        document.getElementById("mioArtista").href = "/artista?artista=" + searchResults.id;
+      })
+
+  }
+
+}
+
+
+
+
+function nuoveUscite(country) {
+  fetch('https://api.spotify.com/v1/browse/new-releases?country=' + country, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      if (validitàToken(searchResults)) {
+        var card = document.getElementById("card-tendenze" + country);
+        var cont = document.getElementById("tendenzeContainer" + country);
+        cont.innerHTML = "";
+        cont.append(card)
+        for (var i = 5; i >= 0; i--) {
+          var clone = card.cloneNode(true)
+          clone.id = "numeroTendenza" + country + i;
+          clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.albums.items[i].name;
+          clone.getElementsByClassName('link')[0].innerHTML = searchResults.albums.items[i].artists[0].name;
+          clone.getElementsByClassName('second-link')[0].href = "/artista?artista=" + searchResults.albums.items[i].artists[0].id;
+          clone.getElementsByClassName("card-img")[0].src = searchResults.albums.items[i].images[0].url;
+          clone.getElementsByClassName('text-muted')[0].innerHTML = searchResults.albums.items[i].release_date;
+          // metto il ref ad /album con allegato l id
+          clone.getElementsByClassName('stretched-link')[0].href = "/album?album=" + searchResults.albums.items[i].id;
+          clone.classList.remove('d-none');
+          card.after(clone);
+        }
+      } else {
+        // console.log("validità token ci ha dato false")
+        nuoveUscite(country)    //ora che ho ripreso il token richiamo la funzione
+      }
+    }
+    )
+}
+
+
+
+
+// PAGINA ARTISTA  (anche sopra c erano altre di artista?)
+
+
+// carica la scheda dell artista e la lista delle canzoni più famose
+function artista() {
+  let tmp = new URLSearchParams(location.search); //prendo l id dell artista dall URL
+  let artistaID = tmp.get("artista")
+
+  // per le fetch a spotify dovrei sempre controllare che il token sia valido 
+
+  fetch("https://api.spotify.com/v1/artists/" + artistaID, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      document.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
+      document.getElementsByClassName("card-text")[0].innerHTML = searchResults.genres[0];
+      document.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
+      document.getElementById("bottonePreferiti").setAttribute("name", artistaID); //metto l id nel bottone  
+      // se non sono loggato non mi serve il bottone dei preferiti
+      if (loggato == false)
+        document.getElementById("bottonePreferiti").remove();
+      listaCanzoniArtista(artistaID)  //devo passare l id dell album per avere la lista delle canzoni
+    })
+}
+
+
+
+// PAGINA ALBUM
+
+
+function album() {
+  let tmp = new URLSearchParams(location.search); //prendo il nome dell album dall URL, sarebbe meglio l ID
+  let albumID = tmp.get("album")
+
+  // prima di una fetch a spotify dovrei sempre controllare che il token sia valido
+  fetch("https://api.spotify.com/v1/albums/" + albumID, {  //es : "http: .... ?type=album&q=The Wall"
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      var card = document.getElementById("card-album");
+      card.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
+      card.getElementsByClassName("card-text")[0].innerHTML = searchResults.artists[0].name;
+      card.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
+      card.getElementsByClassName('text-muted')[0].innerHTML = searchResults.release_date;
+      card.getElementsByClassName('link')[0].href = "/artista?artista=" + searchResults.artists[0].id;
+      listaCanzoni(albumID)  //devo passare l id dell album per avere la lista delle canzoni
+    }
+    )
+}
+
+
+// dato l id dell album genero le card contenenti le info delle traccie
+function listaCanzoni(albumID) {
+  fetch("https://api.spotify.com/v1/albums/" + albumID + "/tracks?limit=50", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((searchResults) => {
+      var card = document.getElementById("card-canzone");
+      var cont = document.getElementById("canzoneContainer");
+      cont.innerHTML = "";
+      cont.append(card)
+      for (var i = searchResults.items.length - 1; i >= 0; i--) {
+        var clone = card.cloneNode(true)
+        clone.id = "numeroCanzone" + i;
+        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.items[i].track_number + " " + searchResults.items[i].name;
+        clone.getElementsByClassName('text-muted')[0].innerHTML = msConversioneMin(searchResults.items[i].duration_ms);
+        for (var j = 1; j < clone.getElementsByClassName('dropdown-item').length; j++) {
+          clone.getElementsByClassName('dropdown-item')[j].setAttribute("id", searchResults.items[i].id);
+        }
+        clone.classList.remove('d-none');
+        card.after(clone);
+      }
+    }
+    )
+}

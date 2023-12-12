@@ -285,63 +285,6 @@
         }
 
 
-        function album() {
-            let tmp = new URLSearchParams(location.search); //prendo il nome dell album dall URL, sarebbe meglio l ID
-            let albumID = tmp.get("album")
-            
-            // prima di una fetch a spotify dovrei sempre controllare che il token sia valido
-            fetch("https://api.spotify.com/v1/albums/" + albumID, {  //es : "http: .... ?type=album&q=The Wall"
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    var card = document.getElementById("card-album");
-                    card.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
-                    card.getElementsByClassName("card-text")[0].innerHTML = searchResults.artists[0].name;
-                    card.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
-                    card.getElementsByClassName('text-muted')[0].innerHTML = searchResults.release_date;
-                    card.getElementsByClassName('link')[0].href = "/artista?artista=" + searchResults.artists[0].id;
-                    listaCanzoni(albumID)  //devo passare l id dell album per avere la lista delle canzoni
-                }
-                )
-        }
-
-
-        // dato l id dell album genero le card contenenti le info delle traccie
-        function listaCanzoni(albumID) {
-            fetch("https://api.spotify.com/v1/albums/" + albumID + "/tracks?limit=50", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    var card = document.getElementById("card-canzone");
-                    var cont = document.getElementById("canzoneContainer");
-                    cont.innerHTML = "";
-                    cont.append(card)
-                    for (var i = searchResults.items.length - 1; i >= 0; i--) {
-                        var clone = card.cloneNode(true)
-                        clone.id = "numeroCanzone" + i;
-                        clone.getElementsByClassName("card-title")[0].innerHTML = searchResults.items[i].track_number + " " + searchResults.items[i].name;
-                        clone.getElementsByClassName('text-muted')[0].innerHTML = msConversioneMin(searchResults.items[i].duration_ms);
-                        for (var j = 1; j < clone.getElementsByClassName('dropdown-item').length; j++) {
-                            clone.getElementsByClassName('dropdown-item')[j].setAttribute("id", searchResults.items[i].id);
-                        }
-                        clone.classList.remove('d-none');
-                        card.after(clone);
-                    }
-                }
-                )
-        }
-
-
-
-
 
     </script>
 

@@ -344,34 +344,6 @@
 
 
 
-        // carica la scheda dell artista e la lista delle canzoni più famose
-        function artista() {
-            let tmp = new URLSearchParams(location.search); //prendo l id dell artista dall URL
-            let artistaID = tmp.get("artista")
-
-            // per le fetch a spotify dovrei sempre controllare che il token sia valido 
-
-            fetch("https://api.spotify.com/v1/artists/" + artistaID, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            })
-                .then((response) => response.json())
-                .then((searchResults) => {
-                    document.getElementsByClassName("card-title")[0].innerHTML = searchResults.name;
-                    document.getElementsByClassName("card-text")[0].innerHTML = searchResults.genres[0];
-                    document.getElementsByClassName("card-img")[0].src = searchResults.images[0].url;
-                    document.getElementById("bottonePreferiti").setAttribute("name", artistaID); //metto l id nel bottone  
-                    // se non sono loggato non mi serve il bottone dei preferiti
-                    if (loggato == false)
-                        document.getElementById("bottonePreferiti").remove(); 
-                    listaCanzoniArtista(artistaID)  //devo passare l id dell album per avere la lista delle canzoni
-                })
-        }
-
-
-
 
     </script>
 

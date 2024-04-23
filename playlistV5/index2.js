@@ -5,7 +5,7 @@ const crypto = require('crypto')
 var cors = require('cors')
 const express = require('express')
 const path = require('path');
-const uri = "mongodb+srv://dellematti:pangolino@utentispotifai.tprldau.mongodb.net/"
+const uri = "mongodb+srv://dellematti:pangolino@utentispotifai.tprldau.mongodb.net/" //mettere password giusta !
 const db = "spotifai"
 
 const app = express()
